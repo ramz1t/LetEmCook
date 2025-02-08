@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from contextlib import contextmanager
 
 Base = declarative_base()
-engine = create_engine('sqlite:///lethimcook.db')
+engine = create_engine('sqlite:///letemcook.db')
 Session = scoped_session(sessionmaker(bind=engine))
 
 
