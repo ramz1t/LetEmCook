@@ -1,3 +1,6 @@
+from typing import List, Tuple
+from sqlalchemy.orm.query import Query
+
 from app.models import session_scope, Recipe, Ingredient, RecipeIngredient
 
 
@@ -16,6 +19,17 @@ class RecipesController:
             return recipe
 
     # Get all recipes (can be filtered by name)
+    def list(self, search: str = "", ) -> List[Recipe]:
+        with session_scope() as session:
+            if search:
+                search_term = f'%{search}%'
+                recipes = session.query(Recipe).filter(
+                    (Recipe.name.ilike(search_term)) | (Recipe.description.ilike(search_term))
+                ).all()
+            else:
+                recipes = session.query(Recipe).all()
+            return recipes
+
 
     # Edit recipe by id and dict of changes
     def update(self, id: int, ingredients: List[Tuple[int, int]], **kwargs) -> Recipe | None:
