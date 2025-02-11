@@ -44,6 +44,8 @@ class Recipe(Base):
     recipe_ingredients = relationship(
         'RecipeIngredient',
         back_populates='recipe',
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
     ingredients = relationship(
         'Ingredient',
@@ -67,6 +69,8 @@ class Ingredient(Base):
     recipe_ingredients = relationship(
         'RecipeIngredient',
         back_populates='ingredient',
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
     recipes = relationship(
         'Recipe',
@@ -104,8 +108,8 @@ class RecipeIngredient(Base):
     """
     __tablename__ = 'recipe_ingredients'
     id = Column(Integer, primary_key=True)
-    recipe_id = Column(Integer, ForeignKey('recipes.id'))
-    ingredient_id = Column(Integer, ForeignKey('ingredients.id'))
+    recipe_id = Column(Integer, ForeignKey('recipes.id', ondelete='CASCADE', name='fk_recipe_id_recipes'))
+    ingredient_id = Column(Integer, ForeignKey('ingredients.id', ondelete='CASCADE', name='fk_ingredient_id_ingredients'))
     quantity = Column(Float)
 
     recipe = relationship(
