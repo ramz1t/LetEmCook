@@ -124,3 +124,5 @@ class RecipeIngredient(Base):
         'Ingredient',
         back_populates='recipe_ingredients',
     )
+
+
