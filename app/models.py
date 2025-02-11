@@ -1,9 +1,13 @@
+import os
+
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship, declarative_base
 from contextlib import contextmanager
 
+from config import PROJECT_PATH
+
 Base = declarative_base()
-engine = create_engine('sqlite:///data.db')
+engine = create_engine('sqlite:///' + os.path.join(PROJECT_PATH, 'app', 'data.db'))
 Session = scoped_session(sessionmaker(bind=engine))
 
 
