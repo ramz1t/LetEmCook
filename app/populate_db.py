@@ -1,6 +1,6 @@
 import json
 
-from app.models import session_scope, Ingredient
+from models import session_scope, Ingredient
 
 if __name__ == '__main__':
     with open('resources/ingredients.json', 'r') as file:
