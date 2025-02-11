@@ -22,9 +22,10 @@ class RecipesController:
     # Edit recipe by id and dict of changes
     def update(self, id: int, ingredients: List[Tuple[int, int]], **kwargs) -> Recipe | None:
         with session_scope() as session:
-            recipe = session.query(Recipe).filter_by(id=id).first()
+            recipe_query = session.query(Recipe).filter_by(id=id)
+            recipe = recipe_query.first()
             if recipe:
-                recipe.update(**kwargs)
+                recipe_query.update(kwargs)
                 session.query(RecipeIngredient).filter_by(recipe_id=id).delete()
                 for ingredient_id, quantity in ingredients:
                     ingredient = session.query(Ingredient).filter_by(id=ingredient_id).first()
