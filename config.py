@@ -1,4 +1,8 @@
+import os
+
 from PyQt5.QtWidgets import QLabel
+
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 NAVIGATION = [
     {
