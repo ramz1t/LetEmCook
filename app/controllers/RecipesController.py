@@ -1,25 +1,17 @@
-from typing import List, Tuple
-from sqlalchemy.orm.query import Query
+from sqlalchemy.orm import Session
 
 from app.models import session_scope, Recipe, Ingredient, RecipeIngredient
 
 
 class RecipesController:
-    def create(self, ingredients: List[Tuple[int, int]], **kwargs) -> Recipe:
+    def create(self, ingredients: list[tuple[int, int]], **kwargs) -> Recipe:
         with session_scope() as session:
             recipe = Recipe(**kwargs)
-            recipe_ingredients = []
-            for ingredient in ingredients:
-                db_ingredient = session.query(Ingredient).filter_by(id=ingredient[0]).first()
-                if db_ingredient is None: continue
-                recipe_ingredient = RecipeIngredient(recipe=recipe, ingredient=db_ingredient, quantity=ingredient[1])
-                recipe_ingredients.append(recipe_ingredient)
             session.add(recipe)
-            session.add_all(recipe_ingredients)
+            self._add_recipe_ingredients(recipe, ingredients, session)
             return recipe
 
-    # Get all recipes (can be filtered by name)
-    def list(self, search: str = "", ) -> List[Recipe]:
+    def list_recipes(self, search: str = str()) -> list[Recipe]:
         with session_scope() as session:
             if search:
                 search_term = f'%{search}%'
@@ -30,19 +22,14 @@ class RecipesController:
                 recipes = session.query(Recipe).all()
             return recipes
 
-
-    # Edit recipe by id and dict of changes
-    def update(self, id: int, ingredients: List[Tuple[int, int]], **kwargs) -> Recipe | None:
+    def update(self, id: int, ingredients: list[tuple[int, int]], **kwargs) -> Recipe | None:
         with session_scope() as session:
             recipe_query = session.query(Recipe).filter_by(id=id)
             recipe = recipe_query.first()
             if recipe:
                 recipe_query.update(kwargs)
                 session.query(RecipeIngredient).filter_by(recipe_id=id).delete()
-                for ingredient_id, quantity in ingredients:
-                    ingredient = session.query(Ingredient).filter_by(id=ingredient_id).first()
-                    recipe_ingredient = RecipeIngredient(recipe=recipe, ingredient=ingredient, quantity=quantity)
-                    session.add(recipe_ingredient)
+                self._add_recipe_ingredients(recipe, ingredients, session)
                 return recipe
             return None
 
@@ -54,7 +41,13 @@ class RecipesController:
                 return True
             return False
 
-    #Search ingredient by name or letters
-    def list_ingredients(self, search: str) -> List[Ingredient]:
+    def list_ingredients(self, search: str) -> list[Ingredient]:
         with session_scope() as session:
             return session.query(Ingredient).filter(Ingredient.name.ilike(f'%{search}%')).all()
+
+    def _add_recipe_ingredients(self, recipe: Recipe, ingredients: list[tuple[int, int]], session: Session):
+        for ingredient_id, quantity in ingredients:
+            ingredient = session.query(Ingredient).filter_by(id=ingredient_id).first()
+            if ingredient is None: continue
+            recipe_ingredient = RecipeIngredient(recipe=recipe, ingredient=ingredient, quantity=quantity)
+            session.add(recipe_ingredient)
