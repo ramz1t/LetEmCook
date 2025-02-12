@@ -53,3 +53,8 @@ class RecipesController:
                 session.delete(recipe)
                 return True
             return False
+
+    #Search ingredient by name or letters
+    def list_ingredients(self, search: str) -> List[Ingredient]:
+        with session_scope() as session:
+            return session.query(Ingredient).filter(Ingredient.name.ilike(f'%{search}%')).all()
