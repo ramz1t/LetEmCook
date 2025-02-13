@@ -58,6 +58,20 @@ class Recipe(Base):
         overlaps='recipe_ingredients',
     )
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'ingredients': [
+                {
+                    'quantity': ri.quantity,
+                    **ri.ingredient.to_dict()
+                }
+                 for ri in self.recipe_ingredients
+            ]
+        }
+
 
 class Ingredient(Base):
     __tablename__ = 'ingredients'
@@ -82,6 +96,18 @@ class Ingredient(Base):
         back_populates='ingredients',
         overlaps='recipe_ingredients'
     )
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'unit': self.unit,
+            'calories': self.calories,
+            'fats': self.fats,
+            'sugars': self.sugars,
+            'carbohydrates': self.carbohydrates,
+            'protein': self.protein,
+        }
 
 
 class RecipeIngredient(Base):
