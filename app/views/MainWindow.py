@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
 from app.controllers.NavigationController import NavigationController
 from app.enums.route import Route
+from app.views.Divider import Divider
 from app.views.Sidebar import Sidebar
 from app.views.factories import *
 
@@ -21,6 +22,8 @@ class MainWindow(QMainWindow):
         # Area where all pages will be shown
         self.content_container = QWidget()
         self.content_container.setLayout(QVBoxLayout())
+        self.content_container.layout().setContentsMargins(0, 0, 0, 0)
+        self.content_container.layout().setSpacing(0)
 
         nav_controller = NavigationController(self.content_container)
 
@@ -35,6 +38,10 @@ class MainWindow(QMainWindow):
         self.sidebar = Sidebar(self.nav_controller)
 
         layout.addWidget(self.sidebar, 0)
+        layout.addWidget(Divider(vertical=True))
         layout.addWidget(self.content_container, 1)
 
         self.setCentralWidget(container)
+
+        # Set initial page
+        self.nav_controller.navigate(Route.HOME)

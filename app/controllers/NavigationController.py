@@ -18,11 +18,11 @@ class NavigationController:
             self.container.setLayout(QVBoxLayout())
 
         # A mapping of route keys to factory functions
-        self._registry = {}
+        self._registry: dict[any, Callable] = {}
         # A history stack for backwards navigation
         self._history: list[tuple[Route, dict]] = []
 
-    def register_route(self, route: Route, factory_function: Callable):
+    def register_route(self, route: Route, factory_function: Callable) -> None:
         """
         Register a route with a factory function.
         The factory function should accept any needed kwargs and return a QWidget.
@@ -31,7 +31,7 @@ class NavigationController:
         """
         self._registry[route] = factory_function
 
-    def navigate(self, route: Route, **kwargs):
+    def navigate(self, route: Route, **kwargs) -> None:
         """
         Creates a new page by looking up the route's factory, clears the container,
         and adds the new page.
@@ -62,7 +62,7 @@ class NavigationController:
         else:
             print(f"Unknown route: {route}")
 
-    def pop_route(self):
+    def pop_route(self) -> None:
         """
         Navigate to the previous route in the navigation history.
         """
@@ -75,7 +75,7 @@ class NavigationController:
         else:
             print("Can't pop root route")
 
-    def _push_history(self, route: Route, kwargs: dict):
+    def _push_history(self, route: Route, kwargs: dict) -> None:
         """
         Updates history for backwards navigation.
         :param route: Route user is redirected to.
