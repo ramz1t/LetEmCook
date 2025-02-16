@@ -152,3 +152,8 @@ class RecipeIngredient(Base):
     )
 
 
+class Note(Base):
+    __tablename__ = 'notes'
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    text = Column(String)
