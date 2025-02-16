@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Let'EmCook")
         self.setGeometry(100, 100, 800, 600)
+        self.setMaximumSize(800, 600)
 
         # Create central widget and main layout
         container = QWidget()
@@ -32,7 +33,7 @@ class MainWindow(QMainWindow):
         nav_controller.register_route(Route.RECIPES, recipes_page_factory)
         nav_controller.register_route(Route.RECIPE_DETAIL, recipe_detail_page_factory)
         nav_controller.register_route(Route.RECIPE_EDIT, recipe_edit_page_factory)
-
+        nav_controller.register_route(Route.RECIPE_CREATE, recipe_create_page_factory)
         self.nav_controller = nav_controller
 
         self.sidebar = Sidebar(self.nav_controller)

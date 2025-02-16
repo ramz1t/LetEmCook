@@ -58,7 +58,7 @@ class TopBar(QFrame):
         # Actions
         if self.actions:
             actions_layout = QHBoxLayout()
-            actions_layout.setAlignment(Qt.AlignHCenter)
+            actions_layout.setAlignment(Qt.AlignVCenter)
             for action in self.actions:
                 self.layout.addWidget(action)
             self.layout.addLayout(actions_layout)
