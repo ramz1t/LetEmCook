@@ -3,10 +3,11 @@ from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import Qt
 
 class Divider(QWidget):
-    def __init__(self, vertical: bool = False, opacity: float = 1):
+    def __init__(self, vertical: bool = False, opacity: float = 1, margin: int = 0):
         super().__init__()
         self.vertical = vertical
         self.opacity = opacity
+        self.margin = margin
 
         if self.vertical:
             # For vertical divider, fix the width to 1px and let the height expand.
@@ -31,4 +32,4 @@ class Divider(QWidget):
         else:
             # Draw a horizontal line centered in the widget.
             y = self.height() // 2
-            painter.drawLine(0, y, self.width(), y)
+            painter.drawLine(self.margin, y, self.width() - self.margin, y)
