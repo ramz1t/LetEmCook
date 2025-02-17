@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 
 from app.controllers.NavigationController import NavigationController
 from app.enums.route import Route
+from app.utils import get_recipes_count_label
 
 
 class RecipesListItemView(QWidget):
@@ -32,15 +33,7 @@ class RecipesListItemView(QWidget):
         """)
 
         # Ingredients count label
-        self.recipes_count_label_text = ""
-        recipes_count = len(recipe["ingredients"])
-        if recipes_count > 1:
-            self.recipes_count_label_text = f"{recipes_count} ingredients"
-        elif recipes_count == 1:
-            self.recipes_count_label_text = f"1 ingredient"
-        else:
-            self.recipes_count_label_text = "No ingredients"
-        self.recipes_count_label = QLabel(self.recipes_count_label_text)
+        self.recipes_count_label = QLabel(get_recipes_count_label(len(recipe["ingredients"])))
         self.recipes_count_label.setStyleSheet("""
             color: darkgray;
             font-weight: semibold;

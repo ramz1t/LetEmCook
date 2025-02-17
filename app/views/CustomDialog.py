@@ -35,9 +35,14 @@ class CustomDialog(QDialog):
         self.message_label.setWordWrap(True)
         self.layout.addWidget(self.message_label)
 
-        # Create a button box with a standard Cancel button.
-        self.button_box = QDialogButtonBox(QDialogButtonBox.Cancel)
-        # Add the custom confirm button with the provided text, role, and color.
+        # Create a button box
+        self.button_box = QDialogButtonBox()
+
+        # Add primary Cancel button
+        self.cancel_button = self.button_box.addButton(QDialogButtonBox.Cancel)
+        self.cancel_button.setDefault(True)
+
+        # Add the custom confirm button with the provided text.
         self.confirm_button = self.button_box.addButton(confirm_text, QDialogButtonBox.AcceptRole)
 
         # Connect signals for accept and reject actions.

@@ -33,7 +33,7 @@ class IngredientsList(QWidget):
             header_layout.setSpacing(0)
             header_layout.setAlignment(Qt.AlignVCenter)
             count_label = QLabel(get_recipes_count_label(len(ingredients)))
-            count_label.setStyleSheet("font-size: 12px; color: gray; font-weight: bold;")
+            count_label.setStyleSheet("font-size: 12px; color: gray;")
             header_layout.addWidget(count_label)
             header.setLayout(header_layout)
 
@@ -42,7 +42,7 @@ class IngredientsList(QWidget):
             for index, ingredient in enumerate(ingredients):
                 ingredients_list_layout.addWidget(self.__create_ingredient_item_view(ingredient))
                 if index < len(ingredients) - 1:
-                    ingredients_list_layout.addWidget(Divider(opacity=0.3, margin=20))
+                    ingredients_list_layout.addWidget(Divider(opacity=0.3))
         else:
             ingredients_list_layout.addWidget(QLabel("No ingredients"))  # TODO: replace with NoContentView
 

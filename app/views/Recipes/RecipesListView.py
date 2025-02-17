@@ -41,7 +41,7 @@ class RecipesListView(QWidget):
                 actions=[
                     self.create_recipe_btn,
                     SearchBar(
-                        on_search=self._search,
+                        on_search=self.__search,
                         placeholder="Search Recipes...",
                     ),
                 ],
@@ -66,5 +66,5 @@ class RecipesListView(QWidget):
 
         self.setLayout(self.layout)
 
-    def _search(self, search: str) -> None:
+    def __search(self, search: str) -> None:
         self.nav_controller.navigate(Route.RECIPES, q=search)

@@ -18,9 +18,9 @@ class NavigationController:
             self.container.setLayout(QVBoxLayout())
 
         # A mapping of route keys to factory functions
-        self._registry: dict[any, Callable] = {}
+        self.__registry: dict[any, Callable] = {}
         # A history stack for backwards navigation
-        self._history: list[tuple[Route, dict]] = []
+        self.__history: list[tuple[Route, dict]] = []
 
     def register_route(self, route: Route, factory_function: Callable) -> None:
         """
@@ -29,7 +29,7 @@ class NavigationController:
         :param route: The route to register.
         :param factory_function: The factory function for view to register.
         """
-        self._registry[route] = factory_function
+        self.__registry[route] = factory_function
 
     def navigate(self, route: Route, **kwargs) -> None:
         """
@@ -39,10 +39,10 @@ class NavigationController:
         :param kwargs: Route factory arguments.
         """
         # Get view factory from registry
-        factory = self._registry.get(route)
+        factory = self.__registry.get(route)
         if factory:
             # Update router history
-            self._push_history(route, kwargs)
+            self.__push_history(route, kwargs)
 
             # Build new page
             new_page = factory(nav_controller=self, **kwargs)
@@ -66,23 +66,23 @@ class NavigationController:
         """
         Navigate to the previous route in the navigation history.
         """
-        if len(self._history) > 1:
+        if len(self.__history) > 1:
             # Remove current Route
-            self._history.pop()
+            self.__history.pop()
             # Get last Route (the one before current)
-            route, kwargs = self._history[-1]
+            route, kwargs = self.__history[-1]
             self.navigate(route, **kwargs)
         else:
             print("Can't pop root route")
 
-    def _push_history(self, route: Route, kwargs: dict) -> None:
+    def __push_history(self, route: Route, kwargs: dict) -> None:
         """
         Updates history for backwards navigation.
         :param route: Route user is redirected to.
         :param kwargs: Kwargs used in view builder
         """
-        if self._history:
-            last_route, last_kwargs = self._history[-1]
+        if self.__history:
+            last_route, last_kwargs = self.__history[-1]
             if last_route == route and last_kwargs == kwargs:
                 return
-        self._history.append((route, kwargs))
+        self.__history.append((route, kwargs))

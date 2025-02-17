@@ -13,9 +13,9 @@ class Sidebar(QWidget):
     def __init__(self, nav_controller: NavigationController):
         super().__init__()
 
-        sidebar_layout = QVBoxLayout()
-        sidebar_layout.setContentsMargins(0, 0, 0, 0)
-        sidebar_layout.setSpacing(0)
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
 
         nav_title = QLabel("Let'EmCook")
         nav_title.setStyleSheet("""
@@ -24,11 +24,11 @@ class Sidebar(QWidget):
             padding: 10px; 
             background: transparent;
         """)
-        sidebar_layout.addWidget(nav_title)
-        sidebar_layout.addWidget(Divider())
+        layout.addWidget(nav_title)
+        layout.addWidget(Divider())
 
         for index, option in enumerate(NAVIGATION):
-            sidebar_layout.addWidget(
+            layout.addWidget(
                 SidebarButton(
                     icon=option["icon"],
                     title=option["title"],
@@ -36,9 +36,9 @@ class Sidebar(QWidget):
                 )
             )
 
-        sidebar_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        self.setLayout(sidebar_layout)
+        self.setLayout(layout)
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
 
 

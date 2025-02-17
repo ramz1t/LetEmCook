@@ -32,7 +32,7 @@ class SearchBar(QWidget):
         # Text field for search input
         self.search_field = QLineEdit()
         self.search_field.setPlaceholderText(placeholder)
-        self.search_field.textChanged.connect(self._update_query)
+        self.search_field.textChanged.connect(self.__update_query)
 
         # Search button
         self.search_btn = QPushButton("Search")
@@ -49,7 +49,7 @@ class SearchBar(QWidget):
 
         self.setLayout(layout)
 
-    def _update_query(self, text: str):
+    def __update_query(self, text: str):
         """
         Update the search query based on the text entered in the text field.
         :param text: The current text in the search field.

@@ -11,10 +11,13 @@ class CreateRecipeView(QWidget):
         super().__init__()
         self.nav_controller = nav_controller
         self.recipes_controller = RecipesController()
+        self.ingredients = []
+        self.name = ""
+        self.description = ""
 
         # Create recipe button
         self.create_btn = QPushButton("Create")
-        self.create_btn.clicked.connect(lambda: self._create_recipe())
+        self.create_btn.clicked.connect(lambda: self.__create_recipe())
 
         # Page layout
         layout = QVBoxLayout()
@@ -33,7 +36,11 @@ class CreateRecipeView(QWidget):
 
         self.setLayout(layout)
 
-    def _create_recipe(self):
-        # created = self.recipes_controller.create()
-        if True:
+    def __create_recipe(self):
+        recipe = self.recipes_controller.create(
+            ingredients=self.ingredients,
+            name=self.name,
+            description=self.description
+        )
+        if recipe:
             self.nav_controller.pop_route()
