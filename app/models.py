@@ -157,3 +157,10 @@ class Note(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String)
     text = Column(String)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "text": self.text
+        }
