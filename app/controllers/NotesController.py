@@ -4,7 +4,7 @@ class NotesController:
     def create(self, **kwargs) -> dict:
         try:
             if not kwargs.get("title") or not kwargs.get("text"):
-                return {"error": "title or text missing"}
+                raise ValueError("Error: title or text missing")
 
             with session_scope() as session:
                 note = Note(**kwargs)
@@ -13,7 +13,7 @@ class NotesController:
                 return note.to_dict()
 
         except Exception as e:
-            return {"Error": f"Something went wrong: {str(e)}"}
+            raise Exception(f"Something went wrong: {str(e)}")
 
     def list(self, search: str = str()):
         pass
