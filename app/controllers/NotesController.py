@@ -16,7 +16,18 @@ class NotesController:
             raise Exception(f"Something went wrong: {str(e)}")
 
     def list(self, search: str = str()):
-        pass
+        try:
+            with session_scope() as session:
+                note_list = session.query(Note)
+                if search:
+                    note_list = note_list.filter(Note.title.contains(search) | Note.text.contains(search))
+
+                notes = note_list.all()
+
+                return [note.to_dict() for note in notes]
+
+        except Exception as e:
+            raise Exception(f"Something went wrong: {str(e)}")
 
     def update(self, **kwargs):
         pass
