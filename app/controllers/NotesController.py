@@ -29,8 +29,22 @@ class NotesController:
         except Exception as e:
             raise Exception(f"Something went wrong: {str(e)}")
 
-    def update(self, **kwargs):
-        pass
+    def update(self, id: int, **kwargs):
+        try:
+            with session_scope() as session:
+                note = session.query(Note).get(id)
+                if not note:
+                    raise Exception("Note not found")
+
+                for key, value in kwargs.items():
+                    if hasattr(note, key):
+                        setattr(note, key, value)
+
+                session.commit()
+                return note.to_dict()
+
+        except Exception as e:
+            raise Exception(f"Something went wrong: {str(e)}")
 
     def delete(self, id: int):
         pass
