@@ -9,10 +9,14 @@ from app.views.factories import *
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        WIDTH = 1200
+        HEIGHT = 800
 
         self.setWindowTitle("Let'EmCook")
-        self.setGeometry(100, 100, 800, 600)
-        self.setMaximumSize(800, 600)
+
+        self.setGeometry(100, 100, WIDTH, HEIGHT)
+        self.setMaximumSize(WIDTH, HEIGHT)
+        self.setMinimumSize(WIDTH, HEIGHT)
 
         # Create central widget and main layout
         container = QWidget()

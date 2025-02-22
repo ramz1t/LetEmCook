@@ -3,6 +3,7 @@ from typing import Callable
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSpacerItem, QSizePolicy
 
 from app.enums.route import Route
+from app.utils import clear_layout
 
 
 class NavigationController:
@@ -49,11 +50,7 @@ class NavigationController:
 
             # Clear the container
             layout = self.container.layout()
-            while layout.count():
-                item = layout.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.deleteLater()
+            clear_layout(layout)
             layout.addWidget(new_page)
 
             # Add spacer to push content up
