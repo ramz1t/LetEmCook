@@ -46,10 +46,6 @@ class RecipeDetailView(QWidget):
         self.ingredients_container_layout.setSpacing(0)
         self.ingredients_container.setLayout(self.ingredients_container_layout)
 
-        self.layout.addWidget(IngredientsList(recipe["ingredients"], self.__set_sorting))
+        self.layout.addWidget(IngredientsList(recipe["ingredients"]))
 
         self.setLayout(self.layout)
-
-    def __set_sorting(self, key: str) -> None:
-        print("sorting set to", key)
-        pass

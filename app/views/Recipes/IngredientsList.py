@@ -9,10 +9,10 @@ from app.views.InfoContainer import InfoContainer
 
 
 class IngredientsList(QWidget):
-    def __init__(self, ingredients: list[dict], set_sorting: Callable):
+    def __init__(self, ingredients: list[dict]):
         super().__init__()
-        # All ingredients area (header and list)
 
+        # All ingredients area (header and list)
         layout = QVBoxLayout()
         layout.setContentsMargins(20, 0, 20, 20)
         layout.setSpacing(0)
@@ -28,7 +28,7 @@ class IngredientsList(QWidget):
         nutrition_info_label = None
 
         if ingredients:
-            # Header with ingredients count and sorting picker
+            # Header with ingredients count
             header = QWidget()
             header_layout = QHBoxLayout()
             header_layout.setContentsMargins(10, 10, 10, 10)
