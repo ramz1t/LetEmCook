@@ -57,4 +57,6 @@ class RecipeEditView(QWidget):
     def __update_recipe(self, data: dict):
         new_recipe = self.recipes_controller.update(self.recipe['id'], **data)
         if new_recipe:
+            # Workaround to hide old un-edited recipe from user
+            self.nav_controller.navigate(Route.RECIPES)
             self.nav_controller.navigate(Route.RECIPE_DETAIL, recipe=new_recipe)

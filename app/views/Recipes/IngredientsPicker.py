@@ -8,11 +8,21 @@ from app.controllers.RecipesController import RecipesController
 from app.utils import clear_layout, style_h2
 from app.views.SearchBar import SearchBar
 
+
 class IngredientsPicker(QWidget):
+    """A widget for selecting and managing ingredients with search and quantity input.
+
+    Displays a list of added ingredients and a searchable list of available ingredients.
+    Users can add or remove ingredients with quantities, and the selected ingredients are
+    passed to a callback function as a list of (id, quantity) tuples.
+
+    Attributes:
+        selected_ingredients: Maps ingredient IDs to their details (id, name, unit, quantity).
+        set_ingredients: Callback to update the parent with selected ingredients.
+    """
+
     def __init__(self, ingredients: list[dict], set_ingredients: Callable[[list[tuple[int, float]]], None]):
         super().__init__()
-        # Initializes selected ingredients as a dict mapping id -> ingredient dict.
-        # Each ingredient dict is expected to have 'id', 'name', 'unit' and 'quantity'
         self.selected_ingredients = {ingredient['id']: ingredient for ingredient in ingredients}
         self.set_ingredients = set_ingredients
         self.recipes_controller = RecipesController()
@@ -49,7 +59,6 @@ class IngredientsPicker(QWidget):
         style_h2(search_ingredients_title)
         search_ingredients_header_layout.addWidget(search_ingredients_title)
         search_ingredients_header_layout.addStretch(1)
-        # SearchBar for ingredients
         self.search_bar = SearchBar(
             on_search=self.__list_found_ingredients,
             placeholder="Search Ingredients...",
@@ -65,21 +74,23 @@ class IngredientsPicker(QWidget):
         self.search_ingredients_layout.setSpacing(0)
         self.search_ingredients.setLayout(self.search_ingredients_layout)
 
-        # Create a QScrollArea for Ingredients
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(self.search_ingredients)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setMaximumHeight(180)
         self.layout.addWidget(self.scroll_area)
-        # Set size policy to allow the scroll area to expand
         self.scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
-        # List ingredients to start with
         self.__list_found_ingredients()
 
         self.setLayout(self.layout)
 
     def __list_found_ingredients(self, search: str = ""):
+        """Populate the searchable ingredients list based on a search query.
+
+        Args:
+            search: Optional search string to filter ingredients. Defaults to empty string.
+        """
         clear_layout(self.search_ingredients_layout)
 
         ingredients = self.recipes_controller.list_ingredients(search)
@@ -101,6 +112,7 @@ class IngredientsPicker(QWidget):
             self.search_ingredients_layout.addWidget(label)
 
     def __list_added_ingredients(self):
+        """Populate the list of added ingredients."""
         clear_layout(self.added_ingredients_layout)
         if self.selected_ingredients:
             for ingredient in self.selected_ingredients.values():
@@ -117,21 +129,33 @@ class IngredientsPicker(QWidget):
             self.added_ingredients_layout.addWidget(label)
 
     def __toggle_ingredient(self, ingredient: dict, quantity: float):
+        """Toggle an ingredient's selection state and update the parent.
+
+        Args:
+            ingredient: Dictionary containing ingredient details (id, name, unit, quantity).
+            quantity: The quantity to associate with the ingredient.
+        """
         if ingredient['id'] in self.selected_ingredients:
             self.selected_ingredients.pop(ingredient['id'])
         else:
-            # Update the ingredient dict with the new quantity
             ingredient['quantity'] = quantity
             self.selected_ingredients[ingredient['id']] = ingredient
 
-        # Refresh both lists
         self.__list_found_ingredients(self.search_bar.q)
         self.__list_added_ingredients()
-        # Update the selected ingredients as a list of (id, quantity) tuples
         self.set_ingredients([(ing['id'], ing['quantity']) for ing in self.selected_ingredients.values()])
 
 
 class IngredientsPickerIngredientItem(QWidget):
+    """A widget representing a single ingredient with quantity input and add/delete button.
+
+    Attributes:
+        ingredient: The ingredient details (id, name, unit).
+        is_added: Whether the ingredient is currently selected.
+        quantity: The quantity of the ingredient.
+        callback: Function to call when toggling the ingredient.
+    """
+
     def __init__(
         self,
         ingredient: dict,
@@ -166,12 +190,18 @@ class IngredientsPickerIngredientItem(QWidget):
         self.setLayout(layout)
 
     def __update_value(self, new_value: str):
+        """Update the quantity when the input field changes.
+
+        Args:
+            new_value: The new text entered in the quantity field.
+        """
         try:
             self.quantity = float(new_value) if new_value else 0.0
         except ValueError:
             self.quantity = 0.0
 
     def __handle_click(self):
+        """Handle the add/delete button click and invoke the callback."""
         if self.quantity is None or self.quantity == 0:
             return
         self.callback(self.ingredient, self.quantity)

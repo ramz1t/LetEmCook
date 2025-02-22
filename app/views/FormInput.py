@@ -5,12 +5,29 @@ from app.utils import style_h2
 
 
 class FormInput(QWidget):
+    """A customizable input widget with a label, supporting single-line or multi-line text entry.
+
+    This widget combines a label with either a `QLineEdit` (single-line) or `QTextEdit` (multi-line)
+    input field, arranged horizontally. It updates its internal `text` property whenever the user
+    modifies the input and supports initial text and custom margins.
+
+    Attributes:
+        text: The current text content of the input field.
+        initial_text: The initial text provided during instantiation.
+        is_multiline: Whether the input is multi-line (`QTextEdit`) or single-line (`QLineEdit`).
+        margins: The margins applied to the layout [left, top, right, bottom].
+
+    Examples:
+        >>> single_line = FormInput("Name", "John Doe")
+        >>> multi_line = FormInput("Description", "Enter details here", is_multiline=True, margins=[10, 5, 10, 5])
+    """
+
     def __init__(
             self,
             title: str,
             initial_text: str = "",
             is_multiline: bool = False,
-            margins: list[int] = None
+            margins: list[int] | None = None
     ):
         super().__init__()
         self.text = initial_text
@@ -44,6 +61,9 @@ class FormInput(QWidget):
         self.setLayout(self.layout)
 
     def __update_text(self):
+        """
+        Update the internal `text` attribute when the input content changes.
+        """
         if self.is_multiline:
             self.text = self.input.toPlainText()
         else:
