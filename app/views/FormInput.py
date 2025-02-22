@@ -41,7 +41,7 @@ class FormInput(QWidget):
 
         self.label = QLabel(title)
         style_h2(self.label)
-        self.label.setMinimumWidth(150)
+        self.label.setMinimumWidth(120)
         self.label.setAlignment(Qt.AlignTop)
 
         if is_multiline:

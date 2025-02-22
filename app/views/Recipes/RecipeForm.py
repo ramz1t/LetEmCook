@@ -62,8 +62,11 @@ class RecipeForm(QWidget):
         Gathers the current values from the name input, description input, and ingredients list,
         constructs a dictionary, and invokes the submit_callback with the data.
         """
-        name = self.name_input.text
-        description = self.description_input.text
+        name = self.name_input.text.strip()
+        description = self.description_input.text.strip()
+
+        if not name or not description:
+            return
 
         data = {
             "name": name,

@@ -9,8 +9,8 @@ from app.views.factories import *
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        WIDTH = 1200
-        HEIGHT = 800
+        WIDTH = 1100
+        HEIGHT = 700
 
         self.setWindowTitle("Let'EmCook")
 

@@ -1,6 +1,6 @@
 from typing import Callable
 
-from PyQt5.QtCore import QRegExp
+from PyQt5.QtCore import QRegExp, Qt
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QScrollArea, QSizePolicy, QLineEdit
 
@@ -27,19 +27,22 @@ class IngredientsPicker(QWidget):
         self.set_ingredients = set_ingredients
         self.recipes_controller = RecipesController()
 
-        self.layout = QVBoxLayout()
+        self.layout = QHBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
+        self.layout.setSpacing(10)
+
+        self.left_column = QVBoxLayout()
+        self.right_column = QVBoxLayout()
 
         # Header for Added Ingredients section
         added_ingredients_header = QWidget()
         added_ingredients_header_layout = QHBoxLayout()
-        added_ingredients_header_layout.setContentsMargins(0, 20, 0, 10)
+        added_ingredients_header_layout.setContentsMargins(0, 10, 0, 10)
         added_ingredients_title = QLabel("Added Ingredients:")
         style_h2(added_ingredients_title)
         added_ingredients_header_layout.addWidget(added_ingredients_title)
         added_ingredients_header.setLayout(added_ingredients_header_layout)
-        self.layout.addWidget(added_ingredients_header)
+        self.left_column.addWidget(added_ingredients_header)
 
         # List for Added Ingredients
         self.added_ingredients = QWidget()
@@ -47,14 +50,23 @@ class IngredientsPicker(QWidget):
         self.added_ingredients_layout.setContentsMargins(0, 0, 0, 0)
         self.added_ingredients_layout.setSpacing(0)
         self.added_ingredients.setLayout(self.added_ingredients_layout)
-        self.layout.addWidget(self.added_ingredients)
+
+        self.added_scroll_area = QScrollArea()
+        self.added_scroll_area.setWidget(self.added_ingredients)
+        self.added_scroll_area.setWidgetResizable(True)
+        self.added_scroll_area.setMinimumHeight(180)
+        self.added_scroll_area.setMaximumHeight(180)
+        self.left_column.addWidget(self.added_scroll_area)
+        self.added_scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+        self.left_column.addStretch(1)
 
         self.__list_added_ingredients()
 
         # Header for Search Ingredients section
         search_ingredients_header = QWidget()
         search_ingredients_header_layout = QHBoxLayout()
-        search_ingredients_header_layout.setContentsMargins(0, 20, 0, 10)
+        search_ingredients_header_layout.setContentsMargins(0, 0, 0, 00)
         search_ingredients_title = QLabel("Search Ingredients:")
         style_h2(search_ingredients_title)
         search_ingredients_header_layout.addWidget(search_ingredients_title)
@@ -65,7 +77,7 @@ class IngredientsPicker(QWidget):
         )
         search_ingredients_header_layout.addWidget(self.search_bar)
         search_ingredients_header.setLayout(search_ingredients_header_layout)
-        self.layout.addWidget(search_ingredients_header)
+        self.right_column.addWidget(search_ingredients_header)
 
         # List for Found Ingredients
         self.search_ingredients = QWidget()
@@ -77,11 +89,17 @@ class IngredientsPicker(QWidget):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(self.search_ingredients)
         self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setMinimumHeight(180)
         self.scroll_area.setMaximumHeight(180)
-        self.layout.addWidget(self.scroll_area)
+        self.right_column.addWidget(self.scroll_area)
         self.scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
+        self.right_column.addStretch(1)
+
         self.__list_found_ingredients()
+
+        self.layout.addLayout(self.left_column, 1)
+        self.layout.addLayout(self.right_column, 1)
 
         self.setLayout(self.layout)
 
@@ -110,6 +128,7 @@ class IngredientsPicker(QWidget):
             label = QLabel("No ingredients found. Check search and try again.")
             style_h2(label)
             self.search_ingredients_layout.addWidget(label)
+        self.search_ingredients_layout.addStretch(1)
 
     def __list_added_ingredients(self):
         """Populate the list of added ingredients."""
@@ -127,6 +146,7 @@ class IngredientsPicker(QWidget):
         else:
             label = QLabel("No added ingredients.")
             self.added_ingredients_layout.addWidget(label)
+        self.added_ingredients_layout.addStretch(1)
 
     def __toggle_ingredient(self, ingredient: dict, quantity: float):
         """Toggle an ingredient's selection state and update the parent.
@@ -179,7 +199,7 @@ class IngredientsPickerIngredientItem(QWidget):
         self.field.textChanged.connect(self.__update_value)
 
         layout = QHBoxLayout()
-        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setContentsMargins(10, 0, 10, 0)
         layout.setSpacing(10)
         layout.addWidget(QLabel(f"{ingredient['name']} ({ingredient['unit']})"))
         layout.addStretch(1)

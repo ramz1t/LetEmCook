@@ -1,10 +1,6 @@
 from typing import Callable
-
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSpacerItem, QSizePolicy
-
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSizePolicy, QScrollArea, QSpacerItem
 from app.enums.route import Route
-from app.utils import clear_layout
-
 
 class NavigationController:
     """
@@ -13,15 +9,33 @@ class NavigationController:
     def __init__(self, container: QWidget):
         # The container where pages are displayed
         self.container = container
-
-        # Assuring that container layout exists
-        if self.container.layout() is None:
-            self.container.setLayout(QVBoxLayout())
+        self.__setup_container()
 
         # A mapping of route keys to factory functions
         self.__registry: dict[any, Callable] = {}
         # A history stack for backwards navigation
         self.__history: list[tuple[Route, dict]] = []
+
+    def __setup_container(self):
+        """
+        Set up the container layout and scroll area.
+        """
+        # Assuring that container layout exists
+        if self.container.layout() is None:
+            self.container.setLayout(QVBoxLayout())
+
+        # Set the container layout to expand fully
+        self.container.layout().setContentsMargins(0, 0, 0, 0)
+        self.container.layout().setSpacing(0)
+
+        # Create a QScrollArea to hold pages
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setObjectName("contentScrollArea")
+        self.scroll_area.setWidgetResizable(False)
+        self.scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # Fill width and height
+        self.scroll_area.setStyleSheet("#contentScrollArea { border: none; }")
+        self.container.layout().addWidget(self.scroll_area)
+        self.container.layout().setStretchFactor(self.scroll_area, 1)  # Ensures scroll area takes full space
 
     def register_route(self, route: Route, factory_function: Callable) -> None:
         """
@@ -47,17 +61,34 @@ class NavigationController:
 
             # Build new page
             new_page = factory(nav_controller=self, **kwargs)
-
-            # Clear the container
-            layout = self.container.layout()
-            clear_layout(layout)
-            layout.addWidget(new_page)
-
-            # Add spacer to push content up
-            spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-            layout.addSpacerItem(spacer)
+            self.__set_page(new_page)
         else:
             print(f"Unknown route: {route}")
+
+    def __set_page(self, new_page: QWidget):
+        """
+        Set the new page in the scroll area.
+        :param new_page: The new page widget to display.
+        """
+        # Create a wrapper widget
+        page_wrapper = QWidget()
+        wrapper_layout = QVBoxLayout()
+        wrapper_layout.setContentsMargins(0, 0, 0, 0)
+        wrapper_layout.setSpacing(0)
+
+        # Ensure new_page takes full width
+        new_page.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        wrapper_layout.addWidget(new_page)
+        wrapper_layout.addItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding))  # Push content up
+        page_wrapper.setLayout(wrapper_layout)
+
+        # Configure the wrapper to take full width and appropriate height
+        page_wrapper.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        page_wrapper.setMinimumHeight(new_page.sizeHint().height())
+        page_wrapper.setMinimumWidth(self.scroll_area.viewport().width())  # Match scroll area width
+
+        # Set the wrapper as the scroll area's widget
+        self.scroll_area.setWidget(page_wrapper)
 
     def pop_route(self) -> None:
         """
