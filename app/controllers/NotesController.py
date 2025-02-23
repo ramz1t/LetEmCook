@@ -40,7 +40,6 @@ class NotesController:
                     if hasattr(note, key):
                         setattr(note, key, value)
 
-                session.commit()
                 return note.to_dict()
 
         except Exception as e:
