@@ -46,4 +46,13 @@ class NotesController:
             raise Exception(f"Something went wrong: {str(e)}")
 
     def delete(self, id: int):
-        pass
+        try:
+            with session_scope() as session:
+                note = session.query(Note).get(id)
+                if not note:
+                    raise Exception("Note not found")
+
+                session.delete(note)
+
+        except Exception as e:
+            raise Exception(f"Something went wrong: {str(e)}")
