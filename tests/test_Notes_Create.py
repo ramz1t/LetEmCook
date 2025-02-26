@@ -39,3 +39,22 @@ class TestNotesController:
             mock_session.commit.assert_called_once()
             assert result == {"id": 1, "title": "Test Note", "text": "This is a test note."}
 
+
+    @patch("app.controllers.NotesController.session_scope")
+    def test_create_note_rejects_blank_title(self, mock_session_scope):
+        # Set up the mock session
+        mock_session = MagicMock()
+        mock_session_scope.return_value.__enter__.return_value = mock_session
+
+        # Prepare input data with a blank title
+        note_data = {
+            "title": "",  # Blank title to simulate error
+            "text": "This is a test note."
+        }
+
+        # Instantiate the controller
+        controller = NotesController()
+
+        # Assert the exception is raised when calling with invalid data
+        with pytest.raises(Exception, match="Something went wrong: Error: title or text missing"):
+            controller.create(**note_data)

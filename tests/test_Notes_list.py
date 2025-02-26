@@ -1,6 +1,9 @@
 import pytest
 from app.models import Base, engine, Session, Note
 from app.controllers.NotesController import NotesController
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.sql import text
+
 
 
 @pytest.fixture(scope="function")
