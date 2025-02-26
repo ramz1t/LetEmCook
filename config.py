@@ -1,18 +1,17 @@
 import os
-
-from PyQt5.QtWidgets import QLabel
+from app.enums.route import Route
 
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 NAVIGATION = [
     {
-        "icon": "resources/images/icons/home.png",
+        "icon": "\U0001F3E0",
         "title": "Home",
-        "view_factory": lambda: QLabel("HOME_PAGE")
+        "route": Route.HOME
     },
     {
-        "icon": "resources/images/icons/home.png",
+        "icon": "\U0001F373",
         "title": "Recipes",
-        "view_factory": lambda: QLabel("RECIPES_PAGE")
+        "route": Route.RECIPES
     }
 ]
