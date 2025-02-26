@@ -13,5 +13,10 @@ NAVIGATION = [
         "icon": "\U0001F373",
         "title": "Recipes",
         "route": Route.RECIPES
+    },
+    {
+        "icon": "\U0001F4DD",
+        "title": "Notes",
+        "route": Route.NOTES
     }
 ]

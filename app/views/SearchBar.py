@@ -13,16 +13,20 @@ class SearchBar(QWidget):
         on_search: A callback function to handle search queries.
         placeholder: Placeholder text for text field.
         show_dismiss: Flag to show dismiss button.
+        initial_value: Initial value for the search bar.
     """
     def __init__(
             self,
             on_search: Callable[[str], None],
             placeholder: str = str(),
             show_dismiss: bool = False,
+            initial_value: str = None,
     ):
         super().__init__()
         self.on_search = on_search
         self.q = ""
+        self.placeholder = placeholder
+        self.initial_value = initial_value
 
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 10, 0, 0)
@@ -33,6 +37,9 @@ class SearchBar(QWidget):
         self.search_field = QLineEdit()
         self.search_field.setPlaceholderText(placeholder)
         self.search_field.textChanged.connect(self.__update_query)
+
+        if initial_value:
+            self.search_field.setText(initial_value)
 
         # Search button
         self.search_btn = QPushButton("Search")

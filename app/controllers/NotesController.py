@@ -9,13 +9,12 @@ class NotesController:
             with session_scope() as session:
                 note = Note(**kwargs)
                 session.add(note)
-                session.commit()
                 return note.to_dict()
 
         except Exception as e:
             raise Exception(f"Something went wrong: {str(e)}")
 
-    def list(self, search: str = str()):
+    def list(self, search: str = str()) -> list[dict]:
         try:
             with session_scope() as session:
                 note_list = session.query(Note)
@@ -29,7 +28,7 @@ class NotesController:
         except Exception as e:
             raise Exception(f"Something went wrong: {str(e)}")
 
-    def update(self, id: int, **kwargs):
+    def update(self, id: int, **kwargs) -> dict:
         try:
             with session_scope() as session:
                 note = session.query(Note).get(id)
@@ -45,7 +44,7 @@ class NotesController:
         except Exception as e:
             raise Exception(f"Something went wrong: {str(e)}")
 
-    def delete(self, id: int):
+    def delete(self, id: int) -> bool:
         try:
             with session_scope() as session:
                 note = session.query(Note).get(id)
@@ -53,6 +52,7 @@ class NotesController:
                     raise Exception("Note not found")
 
                 session.delete(note)
+            return True
 
         except Exception as e:
             raise Exception(f"Something went wrong: {str(e)}")

@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
 from app.controllers.NavigationController import NavigationController
+from app.controllers.StorageManager import StorageManager
 from app.enums.route import Route
 from app.views.Divider import Divider
 from app.views.Sidebar import Sidebar
@@ -17,6 +18,8 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, WIDTH, HEIGHT)
         self.setMaximumSize(WIDTH, HEIGHT)
         self.setMinimumSize(WIDTH, HEIGHT)
+
+        StorageManager.initialize("HKR", "LetEmCook")
 
         # Create central widget and main layout
         container = QWidget()
@@ -38,6 +41,10 @@ class MainWindow(QMainWindow):
         nav_controller.register_route(Route.RECIPE_DETAIL, recipe_detail_page_factory)
         nav_controller.register_route(Route.RECIPE_EDIT, recipe_edit_page_factory)
         nav_controller.register_route(Route.RECIPE_CREATE, recipe_create_page_factory)
+        nav_controller.register_route(Route.NOTES, notes_page_factory)
+        nav_controller.register_route(Route.NOTE_DETAIL, note_detail_page_factory)
+        nav_controller.register_route(Route.NOTE_EDIT, note_edit_page_factory)
+        nav_controller.register_route(Route.NOTE_CREATE, note_create_page_factory)
         self.nav_controller = nav_controller
 
         self.sidebar = Sidebar(self.nav_controller)
