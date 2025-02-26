@@ -8,7 +8,7 @@ class RecipesController:
         with session_scope() as session:
             recipe = Recipe(**kwargs)
             session.add(recipe)
-            self._add_recipe_ingredients(recipe, ingredients, session)
+            self.__add_recipe_ingredients(recipe, ingredients, session)
             return recipe.to_dict()
 
     def list_recipes(self, search: str = str()) -> list[dict]:
@@ -29,7 +29,7 @@ class RecipesController:
             if recipe:
                 recipe_query.update(kwargs)
                 session.query(RecipeIngredient).filter_by(recipe_id=id).delete()
-                self._add_recipe_ingredients(recipe, ingredients, session)
+                self.__add_recipe_ingredients(recipe, ingredients, session)
                 return recipe.to_dict()
             return None
 
@@ -46,7 +46,7 @@ class RecipesController:
             ingredients = session.query(Ingredient).filter(Ingredient.name.ilike(f'%{search}%')).all()
             return [ingredient.to_dict() for ingredient in ingredients]
 
-    def _add_recipe_ingredients(self, recipe: Recipe, ingredients: list[tuple[int, int]], session: Session):
+    def __add_recipe_ingredients(self, recipe: Recipe, ingredients: list[tuple[int, int]], session: Session):
         for ingredient_id, quantity in ingredients:
             ingredient = session.query(Ingredient).filter_by(id=ingredient_id).first()
             if ingredient is None: continue

@@ -1,58 +1,52 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QStackedLayout, QLabel, \
-    QHBoxLayout, QSizePolicy, QSpacerItem
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
+from app.controllers.NavigationController import NavigationController
+from app.enums.route import Route
+from app.views.Divider import Divider
 from app.views.Sidebar import Sidebar
-from config import NAVIGATION
+from app.views.factories import *
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        WIDTH = 1100
+        HEIGHT = 700
 
-        self.setWindowTitle("LetEmCook")
-        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("Let'EmCook")
+
+        self.setGeometry(100, 100, WIDTH, HEIGHT)
+        self.setMaximumSize(WIDTH, HEIGHT)
+        self.setMinimumSize(WIDTH, HEIGHT)
 
         # Create central widget and main layout
-        central_widget = QWidget()
-        main_layout = QHBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
+        container = QWidget()
+        layout = QHBoxLayout(container)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
 
-        # Create sidebar
-        self.sidebar = Sidebar(navigate=self.show_page)
-        main_layout.addWidget(self.sidebar)
+        # Area where all pages will be shown
+        self.content_container = QWidget()
+        self.content_container.setLayout(QVBoxLayout())
+        self.content_container.layout().setContentsMargins(0, 0, 0, 0)
+        self.content_container.layout().setSpacing(0)
 
-        # Create content area
-        self.content_area = QVBoxLayout()
+        nav_controller = NavigationController(self.content_container)
 
-        # Create page title
-        self.page_title = QLabel("")
-        self.content_area.addWidget(self.page_title)
+        # Register app routes here
+        nav_controller.register_route(Route.HOME, home_page_factory)
+        nav_controller.register_route(Route.RECIPES, recipes_page_factory)
+        nav_controller.register_route(Route.RECIPE_DETAIL, recipe_detail_page_factory)
+        nav_controller.register_route(Route.RECIPE_EDIT, recipe_edit_page_factory)
+        nav_controller.register_route(Route.RECIPE_CREATE, recipe_create_page_factory)
+        self.nav_controller = nav_controller
 
-        # Create page container
-        self.page_container = QStackedLayout()
-        self.content_area.addLayout(self.page_container)
+        self.sidebar = Sidebar(self.nav_controller)
 
-        self.content_area.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        layout.addWidget(self.sidebar, 0)
+        layout.addWidget(Divider(vertical=True))
+        layout.addWidget(self.content_container, 1)
 
-        # Set main widget and content area
-        main_layout.addLayout(self.content_area)
-        central_widget.setLayout(main_layout)
-        self.setCentralWidget(central_widget)
+        self.setCentralWidget(container)
 
-    def show_page(self, index):
-        current_page = self.page_container.currentWidget()
-
-        if current_page:
-            self.page_container.removeWidget(current_page)
-            current_page.deleteLater()
-
-        new_page = NAVIGATION[index]["view_factory"]()
-        self.page_container.addWidget(new_page)
-        self.page_container.setCurrentWidget(new_page)
-
-        self.page_title.setText(NAVIGATION[index]["title"])
-        self.page_title.setStyleSheet(
-            "font-weight: bold; font-size: 18px; border-bottom: 1px solid gray; padding: 10px; background: transparent;"
-        )
+        # Set initial page
+        self.nav_controller.navigate(Route.HOME)

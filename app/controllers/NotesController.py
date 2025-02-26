@@ -45,7 +45,6 @@ class NotesController:
         except Exception as e:
             raise Exception(f"Something went wrong: {str(e)}")
 
-
     def delete(self, id: int):
         try:
             with session_scope() as session:
