@@ -9,6 +9,7 @@ class NotesController:
             with session_scope() as session:
                 note = Note(**kwargs)
                 session.add(note)
+                session.flush()
                 return note.to_dict()
 
         except Exception as e:

@@ -9,6 +9,7 @@ class RecipesController:
             recipe = Recipe(**kwargs)
             session.add(recipe)
             self.__add_recipe_ingredients(recipe, ingredients, session)
+            session.flush()
             return recipe.to_dict()
 
     def list_recipes(self, search: str = str()) -> list[dict]:
