@@ -8,4 +8,6 @@ class Route(Enum):
     RECIPE_CREATE = auto()
     NOTES = auto()
     NOTE_DETAIL = auto()
+    NOTE_EDIT = auto()
+    NOTE_CREATE = auto()
     # Add new routes here if needed

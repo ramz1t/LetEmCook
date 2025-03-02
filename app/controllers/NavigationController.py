@@ -65,6 +65,18 @@ class NavigationController:
         else:
             print(f"Unknown route: {route}")
 
+    def reload(self):
+        """
+        Reloads the current page
+        """
+        if self.__history:
+            route, kwargs = self.__history[-1]
+            factory = self.__registry.get(route)
+            new_page = factory(nav_controller=self, **kwargs)
+            self.__set_page(new_page)
+        else:
+            print("No current page to reload")
+
     def __set_page(self, new_page: QWidget):
         """
         Set the new page in the scroll area.

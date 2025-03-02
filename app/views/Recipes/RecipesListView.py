@@ -43,6 +43,7 @@ class RecipesListView(QWidget):
                     SearchBar(
                         on_search=self.__search,
                         placeholder="Search Recipes...",
+                        initial_value=q
                     ),
                 ],
                 is_root_view=not q, # If search is active, user can click "<-" button to go back to all recipes
