@@ -36,7 +36,6 @@ class NutritionController:
         pass
 
     def getBMI(self, weight: float, height: float) -> float:
-        pass
-
-
-
+         height_in_meters = height / 100
+         bmi = weight / (height_in_meters ** 2)
+         return round(bmi, 2)
