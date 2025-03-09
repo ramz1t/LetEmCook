@@ -17,7 +17,17 @@ class NutritionController:
             raise ValueError("Gender is not male or female.")
 
     def getTDEE(self, weight: float, height: float, age: int, gender: str, activity_type: ActivityType, goal: Goal) -> int:
-        pass
+        bmr = self.getBMR(weight, height, age, gender)
+
+        if not isinstance(activity_type, ActivityType):
+            raise ValueError("Invalid activity type.")
+        if not isinstance(goal, Goal):
+            raise ValueError("Invalid goal type.")
+
+        tdee = bmr * activity_type.value
+        tdee += goal.value
+
+        return round(tdee)
 
     def getRecipeCalories(self, recipe: Recipe) -> int:
         pass
