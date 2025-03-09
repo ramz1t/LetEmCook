@@ -30,7 +30,11 @@ class NutritionController:
         return round(tdee)
 
     def getRecipeCalories(self, recipe: Recipe) -> int:
-        pass
+        total_calories = sum(
+            recipe_ingredient.ingredient.calories * recipe_ingredient.quantity
+            for recipe_ingredient in recipe.recipe_ingredients
+        )
+        return round(total_calories)
 
     def getRecommendedRecipes(self, tdee: int) -> list[Recipe]:
         pass
