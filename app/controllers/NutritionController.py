@@ -1,3 +1,5 @@
+import itertools
+
 from app.controllers.RecipesController import RecipesController
 from app.enums.activity_type import ActivityType
 from app.enums.goal import Goal
@@ -36,8 +38,32 @@ class NutritionController:
         )
         return round(total_calories)
 
-    def getRecommendedRecipes(self, tdee: int) -> list[Recipe]:
-        pass
+    def getRecipeProtein(self, recipe: Recipe) -> float:
+        return sum(ri.ingredient.protein * ri.quantity for ri in recipe.recipe_ingredients)
+
+    def getRecommendedRecipes(self, tdee: int) -> str | list[dict]:
+        all_recipes = self.recipes_controller.list_recipes()
+
+        meal_combinations = list(itertools.combinations(all_recipes, 3))
+
+        min_calories = tdee * 0.9
+        max_calories = tdee * 1.1
+
+        valid_meals = []
+
+        for meals in meal_combinations:
+            total_calories = sum(self.getRecipeCalories(meal) for meal in meals)
+
+            if min_calories <= total_calories <= max_calories:
+                total_protein = sum(self.getRecipeProtein(meal) for meal in meals)
+                valid_meals.append((meals, total_protein))
+
+        if not valid_meals:
+            return "No combination of 3 meals found for recommended calorie intake."
+
+        best_meals = max(valid_meals, key=lambda x: x[1])[0]
+
+        return list(best_meals)
 
     def getBMI(self, weight: float, height: float) -> float:
          height_in_meters = height / 100
