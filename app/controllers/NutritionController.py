@@ -32,14 +32,38 @@ class NutritionController:
         return round(tdee)
 
     def getRecipeCalories(self, recipe: Recipe) -> int:
-        total_calories = sum(
-            recipe_ingredient.ingredient.calories * recipe_ingredient.quantity
-            for recipe_ingredient in recipe.recipe_ingredients
-        )
+
+        total_calories = 0
+
+        for recipe_ingredient in recipe.recipe_ingredients:
+            ingredient = recipe_ingredient.ingredient
+            quantity = recipe_ingredient.quantity
+
+            if ingredient.unit in ["g", "ml"]:
+                calorie_per_unit = ingredient.calories / 100
+            else:
+                calorie_per_unit = ingredient.calories
+
+            total_calories += calorie_per_unit * quantity
+
         return round(total_calories)
 
     def getRecipeProtein(self, recipe: Recipe) -> float:
-        return sum(ri.ingredient.protein * ri.quantity for ri in recipe.recipe_ingredients)
+
+        total_protein = 0
+
+        for recipe_ingredient in recipe.recipe_ingredients:
+            ingredient = recipe_ingredient.ingredient
+            quantity = recipe_ingredient.quantity
+
+            if ingredient.unit in ["g", "ml"]:
+                protein_per_unit = ingredient.protein / 100
+            else:
+                protein_per_unit = ingredient.protein
+
+            total_protein += protein_per_unit * quantity
+
+        return round(total_protein, 2)
 
     def getRecommendedRecipes(self, tdee: int) -> str | list[dict]:
         all_recipes = self.recipes_controller.list_recipes()
