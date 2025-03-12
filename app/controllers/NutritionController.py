@@ -10,7 +10,7 @@ class NutritionController:
     def __init__(self):
         self.recipes_controller = RecipesController()
 
-    def getBMR(self, weight: float, height: float, age: int, gender: str) -> float:
+    def get_BMR(self, weight: float, height: float, age: int, gender: str) -> float:
         if gender == "female":
             return (weight * 10) + (height * 6.25) - (age * 5) - 161
         elif gender == "male":
@@ -18,8 +18,8 @@ class NutritionController:
         else:
             raise ValueError("Gender is not male or female.")
 
-    def getTDEE(self, weight: float, height: float, age: int, gender: str, activity_type: ActivityType, goal: Goal) -> int:
-        bmr = self.getBMR(weight, height, age, gender)
+    def get_TDEE(self, weight: float, height: float, age: int, gender: str, activity_type: ActivityType, goal: Goal) -> int:
+        bmr = self.get_BMR(weight, height, age, gender)
 
         if not isinstance(activity_type, ActivityType):
             raise ValueError("Invalid activity type.")
@@ -31,7 +31,7 @@ class NutritionController:
 
         return round(tdee)
 
-    def getRecipeCalories(self, recipe: Recipe) -> int:
+    def get_recipe_calories(self, recipe: Recipe) -> int:
 
         total_calories = 0
 
@@ -48,7 +48,7 @@ class NutritionController:
 
         return round(total_calories)
 
-    def getRecipeProtein(self, recipe: Recipe) -> float:
+    def get_recipe_protein(self, recipe: Recipe) -> float:
 
         total_protein = 0
 
@@ -65,7 +65,7 @@ class NutritionController:
 
         return round(total_protein, 2)
 
-    def getRecommendedRecipes(self, tdee: int) -> str | list[dict]:
+    def get_recommended_recipes(self, tdee: int) -> str | list[dict]:
         all_recipes = self.recipes_controller.list_recipes()
 
         meal_combinations = list(itertools.combinations(all_recipes, 3))
@@ -76,10 +76,10 @@ class NutritionController:
         valid_meals = []
 
         for meals in meal_combinations:
-            total_calories = sum(self.getRecipeCalories(meal) for meal in meals)
+            total_calories = sum(self.get_recipe_calories(meal) for meal in meals)
 
             if min_calories <= total_calories <= max_calories:
-                total_protein = sum(self.getRecipeProtein(meal) for meal in meals)
+                total_protein = sum(self.get_recipe_protein(meal) for meal in meals)
                 valid_meals.append((meals, total_protein))
 
         if not valid_meals:
@@ -89,7 +89,7 @@ class NutritionController:
 
         return list(best_meals)
 
-    def getBMI(self, weight: float, height: float) -> float:
+    def get_BMI(self, weight: float, height: float) -> float:
          height_in_meters = height / 100
          bmi = weight / (height_in_meters ** 2)
          return round(bmi, 2)
