@@ -57,6 +57,7 @@ def test_get_recipe_calories(nutrition_controller):
     recipe_ingredient2 = RecipeIngredient(ingredient=ingredient2, quantity=150)
     recipe = Recipe(recipe_ingredients=[recipe_ingredient1, recipe_ingredient2])
     expected_calories = round((ingredient1.calories / 100 * 200) + (ingredient2.calories / 100 * 150))
+
     assert nutrition_controller.get_recipe_calories(recipe.to_dict()) == expected_calories
 
 def test_get_recipe_protein(nutrition_controller):
@@ -66,6 +67,7 @@ def test_get_recipe_protein(nutrition_controller):
     recipe_ingredient2 = RecipeIngredient(ingredient=ingredient2, quantity=150)
     recipe = Recipe(recipe_ingredients=[recipe_ingredient1, recipe_ingredient2])
     expected_protein = round((ingredient1.protein / 100 * 200) + (ingredient2.protein / 100 * 150), 2)
+
     assert nutrition_controller.get_recipe_protein(recipe.to_dict()) == expected_protein
 
 def test_get_recommended_recipes(nutrition_controller):
