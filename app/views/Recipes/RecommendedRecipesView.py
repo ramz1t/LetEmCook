@@ -30,7 +30,7 @@ class RecommendedRecipesView(QWidget):
 
         # Activity type selection dropdown
         self.activity_type_dropdown = QComboBox(self)
-        self.activity_type_dropdown.addItems([each.name for each in ActivityType])
+        self.activity_type_dropdown.addItems([each.name.replace("_", " ").title() for each in ActivityType])
 
         # Layout setup
         self.layout = QVBoxLayout()
