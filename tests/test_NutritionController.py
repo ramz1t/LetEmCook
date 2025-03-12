@@ -57,7 +57,7 @@ def test_get_recipe_calories(nutrition_controller):
     recipe_ingredient2 = RecipeIngredient(ingredient=ingredient2, quantity=150)
     recipe = Recipe(recipe_ingredients=[recipe_ingredient1, recipe_ingredient2])
     expected_calories = round((ingredient1.calories / 100 * 200) + (ingredient2.calories / 100 * 150))
-    assert nutrition_controller.get_recipe_calories(recipe) == expected_calories
+    assert nutrition_controller.get_recipe_calories(recipe.to_dict()) == expected_calories
 
 def test_get_recipe_protein(nutrition_controller):
     ingredient1 = Ingredient(name="Chicken", calories=165, protein=31, unit="g")
@@ -66,22 +66,29 @@ def test_get_recipe_protein(nutrition_controller):
     recipe_ingredient2 = RecipeIngredient(ingredient=ingredient2, quantity=150)
     recipe = Recipe(recipe_ingredients=[recipe_ingredient1, recipe_ingredient2])
     expected_protein = round((ingredient1.protein / 100 * 200) + (ingredient2.protein / 100 * 150), 2)
-    assert nutrition_controller.get_recipe_protein(recipe) == expected_protein
+    assert nutrition_controller.get_recipe_protein(recipe.to_dict()) == expected_protein
 
 def test_get_recommended_recipes(nutrition_controller):
-    recipe1 = MagicMock()
-    recipe2 = MagicMock()
-    recipe3 = MagicMock()
-    recipe4 = MagicMock()
+    ingredient1 = Ingredient(calories=100, protein=10, unit="g")
+    ingredient2 = Ingredient(calories=200, protein=20, unit="g")
+    ingredient3 = Ingredient(calories=300, protein=30, unit="g")
+    ingredient4 = Ingredient(calories=600, protein=30, unit="g")
 
-    recipe1.recipe_ingredients = [RecipeIngredient(ingredient=Ingredient(calories=100, protein=10, unit="g"), quantity=100)]
-    recipe2.recipe_ingredients = [RecipeIngredient(ingredient=Ingredient(calories=200, protein=20, unit="g"), quantity=100)]
-    recipe3.recipe_ingredients = [RecipeIngredient(ingredient=Ingredient(calories=300, protein=30, unit="g"), quantity=100)]
-    recipe4.recipe_ingredients = [RecipeIngredient(ingredient=Ingredient(calories=600, protein=30, unit="g"), quantity=100)]
-    nutrition_controller.recipes_controller.list_recipes.return_value = [recipe1, recipe2, recipe3, recipe4]
+    recipe_ingredient1 = RecipeIngredient(ingredient=ingredient1, quantity=100)
+    recipe_ingredient2 = RecipeIngredient(ingredient=ingredient2, quantity=100)
+    recipe_ingredient3 = RecipeIngredient(ingredient=ingredient3, quantity=100)
+    recipe_ingredient4 = RecipeIngredient(ingredient=ingredient4, quantity=100)
+
+    recipe1 = Recipe(recipe_ingredients=[recipe_ingredient1])
+    recipe2 = Recipe(recipe_ingredients=[recipe_ingredient2])
+    recipe3 = Recipe(recipe_ingredients=[recipe_ingredient3])
+    recipe4 = Recipe(recipe_ingredients=[recipe_ingredient4])
+
+    nutrition_controller.recipes_controller.list_recipes = lambda: [recipe1.to_dict(), recipe2.to_dict(), recipe3.to_dict(), recipe4.to_dict()]
 
     tdee = 600
-    expected_recipes = [recipe1, recipe2, recipe3]
+    expected_recipes = [recipe1.to_dict(), recipe2.to_dict(), recipe3.to_dict()]
+
     assert nutrition_controller.get_recommended_recipes(tdee) == expected_recipes
 
 def test_get_BMI(nutrition_controller):

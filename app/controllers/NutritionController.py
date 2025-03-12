@@ -31,37 +31,33 @@ class NutritionController:
 
         return round(tdee)
 
-    def get_recipe_calories(self, recipe: Recipe) -> int:
+    def get_recipe_calories(self, recipe: dict) -> int:
 
         total_calories = 0
 
-        for recipe_ingredient in recipe.recipe_ingredients:
-            ingredient = recipe_ingredient.ingredient
-            quantity = recipe_ingredient.quantity
+        for ingredient in recipe["ingredients"]:
 
-            if ingredient.unit in ["g", "ml"]:
-                calorie_per_unit = ingredient.calories / 100
+            if ingredient["unit"] in ["g", "ml"]:
+                calorie_per_unit = ingredient["calories"] / 100
             else:
-                calorie_per_unit = ingredient.calories
+                calorie_per_unit = ingredient["calories"]
 
-            total_calories += calorie_per_unit * quantity
+            total_calories += calorie_per_unit * ingredient["quantity"]
 
         return round(total_calories)
 
-    def get_recipe_protein(self, recipe: Recipe) -> float:
+    def get_recipe_protein(self, recipe: dict) -> float:
 
         total_protein = 0
 
-        for recipe_ingredient in recipe.recipe_ingredients:
-            ingredient = recipe_ingredient.ingredient
-            quantity = recipe_ingredient.quantity
+        for ingredient in recipe["ingredients"]:
 
-            if ingredient.unit in ["g", "ml"]:
-                protein_per_unit = ingredient.protein / 100
+            if ingredient["unit"] in ["g", "ml"]:
+                protein_per_unit = ingredient["protein"] / 100
             else:
-                protein_per_unit = ingredient.protein
+                protein_per_unit = ingredient["protein"]
 
-            total_protein += protein_per_unit * quantity
+            total_protein += protein_per_unit * ingredient["quantity"]
 
         return round(total_protein, 2)
 
