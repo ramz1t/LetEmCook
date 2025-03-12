@@ -9,6 +9,10 @@ from app.views.TopBar import TopBar
 from app.views.Divider import Divider
 
 
+# #     goal button, activity type button, recommendations button
+        ## change it with just qwidget, layout for this list, qvboxlayout, helper function to clean this list, pass clear layout function to the layout.
+
+
 class RecommendedRecipesView(QWidget):
     def __init__(self, nav_controller: NavigationController):
         super().__init__()
@@ -24,6 +28,10 @@ class RecommendedRecipesView(QWidget):
         self.recommend_button = QPushButton("Recommend")
         self.recommend_button.clicked.connect(self.get_recommendations)
 
+        # Activity type selection dropdown
+        self.activity_type_dropdown = QComboBox(self)
+        self.activity_type_dropdown.addItems([each.name for each in ActivityType])
+
         # Layout setup
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -34,7 +42,7 @@ class RecommendedRecipesView(QWidget):
             TopBar(
                 title="Recommended Recipes",
                 nav_controller=nav_controller,
-                actions=[self.goal_dropdown, self.recommend_button],
+                actions=[self.goal_dropdown, self.activity_type_dropdown, self.recommend_button],
                 is_root_view=True,
             )
         )
