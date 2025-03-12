@@ -10,4 +10,5 @@ class Route(Enum):
     NOTE_DETAIL = auto()
     NOTE_EDIT = auto()
     NOTE_CREATE = auto()
+    RECOMMENDATIONS = auto()
     # Add new routes here if needed

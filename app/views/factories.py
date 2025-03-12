@@ -9,6 +9,7 @@ from app.views.Recipes.CreateRecipeView import CreateRecipeView
 from app.views.Recipes.RecipeDetailView import RecipeDetailView
 from app.views.Recipes.RecipeEditView import RecipeEditView
 from app.views.Recipes.RecipesListView import RecipesListView
+from app.views.Recipes.RecommendedRecipesView import RecommendedRecipesView
 
 
 def home_page_factory(**kwargs):
@@ -37,3 +38,6 @@ def note_edit_page_factory(nav_controller: NavigationController, note=None, **kw
 
 def note_create_page_factory(nav_controller: NavigationController,**kwargs):
     return CreateNoteView(nav_controller=nav_controller)
+
+def recommended_recipes_page_factory(nav_controller: NavigationController, **kwargs):
+    return RecommendedRecipesView(nav_controller=nav_controller)
