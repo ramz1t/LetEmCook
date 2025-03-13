@@ -11,6 +11,7 @@ from app.controllers.NavigationController import NavigationController
 from app.enums.storage import StorageKey
 from app.utils import clear_layout, style_h2
 from app.views.CustomDialog import CustomDialog
+from app.views.NoContentView import NoContentView
 from app.views.Recipes.RecipesListItemView import RecipesListItemView
 from app.views.TopBar import TopBar
 from app.views.Divider import Divider
@@ -131,8 +132,13 @@ class RecommendedRecipesView(QWidget):
         self.recipes_layout.addWidget(Divider())
 
         if not recommended_recipes or not isinstance(recommended_recipes, list):
-            no_recipes_label = QLabel("No combination of 3 meals found for recommended calorie intake.") # TODO: replace with NoContentView
-            self.recipes_layout.addWidget(no_recipes_label)
+            self.recipes_layout.addWidget(
+                NoContentView(
+                    title="No Recommendations This Time",
+                    description="We could not find suitable recipes for your needs. Try changing your goal or adding more recipes.",
+                    margins=[0, 160, 0, 0]
+                )
+            )
         else:
             for recipe in recommended_recipes:
                 recipe_item = RecipesListItemView(recipe=recipe, nav_controller=self.nav_controller)
@@ -141,7 +147,6 @@ class RecommendedRecipesView(QWidget):
             self.total_cals = sum(self.nutrition_controller.get_recipe_calories(recipe) for recipe in recommended_recipes)
             self.total_cals_label = QLabel(f"Total calorie intake: {self.total_cals}kcal")
             style_h2(self.total_cals_label)
-            self.total_cals_label.setContentsMargins(20, 10, 0, 10)
             self.subheader_layout.addWidget(self.total_cals_label)
 
         self.recipes_layout.addStretch()

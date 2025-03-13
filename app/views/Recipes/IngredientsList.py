@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayo
 from app.utils import get_recipes_count_label
 from app.views.Divider import Divider
 from app.views.InfoContainer import InfoContainer
+from app.views.NoContentView import NoContentView
 
 
 class IngredientsList(QWidget):
@@ -54,7 +55,13 @@ class IngredientsList(QWidget):
             nutrition_info_label.setContentsMargins(10, 10, 10, 10)
 
         else:
-            ingredients_list_layout.addWidget(QLabel("No ingredients"))  # TODO: replace with NoContentView
+            ingredients_list_layout.addWidget(
+                NoContentView(
+                    title="No Ingredients",
+                    description="This recipe has no ingredients. Change the recipe and they will show up here",
+                    margins=[0,16,0,16]
+                )
+            )
 
         layout.addWidget(InfoContainer(ingredients_list))
 

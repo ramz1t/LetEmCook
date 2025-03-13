@@ -19,7 +19,7 @@ class RecipesListItemView(QWidget):
         self.layout.setAlignment(Qt.AlignVCenter)
 
         # ID label
-        self.id_label = QLabel(str(recipe['id']))
+        self.id_label = QLabel(f"#{str(recipe['id'])}")
         self.id_label.setStyleSheet("""
             color: gray;
             font-weight: semibold;

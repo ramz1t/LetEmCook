@@ -126,7 +126,7 @@ class IngredientsPicker(QWidget):
                 )
         else:
             label = QLabel("No ingredients found. Check search and try again.")
-            style_h2(label)
+            label.setContentsMargins(10, 10, 10, 10)
             self.search_ingredients_layout.addWidget(label)
         self.search_ingredients_layout.addStretch(1)
 
@@ -145,6 +145,7 @@ class IngredientsPicker(QWidget):
                 )
         else:
             label = QLabel("No added ingredients.")
+            label.setContentsMargins(10, 10, 10, 10)
             self.added_ingredients_layout.addWidget(label)
         self.added_ingredients_layout.addStretch(1)
 
