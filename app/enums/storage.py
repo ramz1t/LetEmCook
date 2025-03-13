@@ -6,3 +6,8 @@ class StorageKey(Enum):
 
     ActivityType = "ActivityType"
     Goal = "Goal"
+    
+    Age = "age"
+    Height = "height"
+    CurrentWeight = "weight"
+    Sex = "sex"
