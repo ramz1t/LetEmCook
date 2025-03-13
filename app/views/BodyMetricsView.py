@@ -1,34 +1,51 @@
+from PyQt5.QtCore import QRegExp
+from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import (
-    QWidget, QPushButton, QComboBox, QMessageBox, QLineEdit
+    QWidget, QPushButton, QComboBox, QMessageBox, QLineEdit, QVBoxLayout
 )
 
 from app.controllers.StorageManager import StorageManager
 from app.enums.storage import StorageKey
+from app.views.FormInput import FormInput
 
 
 class BodyMetricsForm(QWidget):
     def __init__(self):
         super().__init__()
+        regex = QRegExp("^-?\d+([.,]\d+)?$")
+        validator = QRegExpValidator(regex)
+        
+        self.layout = QVBoxLayout()
 
         # Age input
-        self.age_input = QLineEdit()
-        self.age_input.setPlaceholderText("Enter Age")
+        self.age_input = FormInput(
+            title="Age",
+            initial_text=StorageManager.get_value(StorageKey.Age.value, "")
+        )
+        self.age_input.input.setValidator(validator)
         self.layout.addWidget(self.age_input)
 
         # Height input
-        self.height_input = QLineEdit()
-        self.height_input.setPlaceholderText("Enter Height (cm)")
+        self.height_input = FormInput(
+            title="Height",
+            initial_text=StorageManager.get_value(StorageKey.Height.value, "")
+        )
+        self.height_input.input.setValidator(validator)
         self.layout.addWidget(self.height_input)
 
         # Current weight input
-        self.current_weight_input = QLineEdit()
-        self.current_weight_input.setPlaceholderText("Enter Current Weight (kg)")
+        self.current_weight_input = FormInput(
+            title="Current Weight",
+            initial_text=StorageManager.get_value(StorageKey.CurrentWeight.value, "")
+        )
+        self.current_weight_input.input.setValidator(validator)
         self.layout.addWidget(self.current_weight_input)
 
         # Sex selection
         self.sex_selector = QComboBox()
         self.sex_selector.addItems(["Female", "Male"])
         self.sex_selector.setToolTip("Select your sex")
+        self.sex_selector.setCurrentText(StorageManager.get_value(StorageKey.Sex.value, "Female"))
         self.layout.addWidget(self.sex_selector)
 
         # Save button
@@ -38,19 +55,6 @@ class BodyMetricsForm(QWidget):
 
         # Set the layout for the widget
         self.setLayout(self.layout)
-
-        # Load previously saved data (if any) from StorageManager
-        self.__load_data()
-
-    def __load_data(self):
-        """
-        Load saved body metrics from storage and populate the form fields.
-        """
-        # Get values from StorageManager and set them in the fields
-        self.age_input.setText(StorageManager.get_value(StorageKey.Age.value, ""))
-        self.height_input.setText(StorageManager.get_value(StorageKey.Height.value, ""))
-        self.current_weight_input.setText(StorageManager.get_value(StorageKey.CurrentWeight.value, ""))
-        self.sex_selector.setCurrentText(StorageManager.get_value(StorageKey.Sex.value, "Female"))
 
     def __validate_data(self, data):
         """
@@ -81,9 +85,9 @@ class BodyMetricsForm(QWidget):
         """
         # Gather data from input fields
         form_data = {
-            "age": self.age_input.text().strip(),
-            "height": self.height_input.text().strip(),
-            "current_weight": self.current_weight_input.text().strip(),
+            "age": self.age_input.text.strip(),
+            "height": self.height_input.text.strip(),
+            "current_weight": self.current_weight_input.text.strip(),
             "sex": self.sex_selector.currentText(),
         }
 
