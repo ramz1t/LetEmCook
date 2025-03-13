@@ -1,26 +1,14 @@
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QPushButton, QComboBox, QMessageBox, QLineEdit
+    QWidget, QPushButton, QComboBox, QMessageBox, QLineEdit
 )
 
 from app.controllers.StorageManager import StorageManager
-
+from app.enums.storage import StorageKey
 
 
 class BodyMetricsForm(QWidget):
-    def __init__(self, submit_callback):
+    def __init__(self):
         super().__init__()
-
-        # Store the callback function for submission events
-        self.submit_callback = submit_callback
-
-        # Create the main layout for the form
-        self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(60, 15, 60, 15)
-
-        # Name input
-        self.name_input = QLineEdit()
-        self.name_input.setPlaceholderText("Enter Name")
-        self.layout.addWidget(self.name_input)
 
         # Age input
         self.age_input = QLineEdit()
@@ -37,11 +25,6 @@ class BodyMetricsForm(QWidget):
         self.current_weight_input.setPlaceholderText("Enter Current Weight (kg)")
         self.layout.addWidget(self.current_weight_input)
 
-        # Goal weight input
-        self.goal_weight_input = QLineEdit()
-        self.goal_weight_input.setPlaceholderText("Enter Goal Weight (kg)")
-        self.layout.addWidget(self.goal_weight_input)
-
         # Sex selection
         self.sex_selector = QComboBox()
         self.sex_selector.addItems(["Female", "Male"])
@@ -57,21 +40,19 @@ class BodyMetricsForm(QWidget):
         self.setLayout(self.layout)
 
         # Load previously saved data (if any) from StorageManager
-        self.load_data()
+        self.__load_data()
 
-    def load_data(self):
+    def __load_data(self):
         """
         Load saved body metrics from storage and populate the form fields.
         """
         # Get values from StorageManager and set them in the fields
-        self.name_input.setText(StorageManager.get_value("body_metrics/name", ""))
-        self.age_input.setText(StorageManager.get_value("body_metrics/age", ""))
-        self.height_input.setText(StorageManager.get_value("body_metrics/height", ""))
-        self.current_weight_input.setText(StorageManager.get_value("body_metrics/current_weight", ""))
-        self.goal_weight_input.setText(StorageManager.get_value("body_metrics/goal_weight", ""))
-        self.sex_selector.setCurrentText(StorageManager.get_value("body_metrics/sex", "Female"))
+        self.age_input.setText(StorageManager.get_value(StorageKey.Age.value, ""))
+        self.height_input.setText(StorageManager.get_value(StorageKey.Height.value, ""))
+        self.current_weight_input.setText(StorageManager.get_value(StorageKey.CurrentWeight.value, ""))
+        self.sex_selector.setCurrentText(StorageManager.get_value(StorageKey.Sex.value, "Female"))
 
-    def validate_data(self, data):
+    def __validate_data(self, data):
         """
         Validate the collected form data to ensure it is properly formatted.
 
@@ -86,16 +67,10 @@ class BodyMetricsForm(QWidget):
             int(data["age"])  # Age must be a valid integer
             float(data["height"])  # Height must be a valid number
             float(data["current_weight"])  # Current weight must be a valid number
-            float(data["goal_weight"])  # Goal weight must be a valid number
         except ValueError:
             # Show an error message for invalid numeric entries
             QMessageBox.warning(self, "Validation Error",
-                                "Please enter valid numeric values for age, height, and weights.")
-            return False
-
-        # Check if the name field is not empty
-        if not data["name"]:
-            QMessageBox.warning(self, "Validation Error", "Name cannot be empty.")
+                                "Please enter valid numeric values for age, height, and weight.")
             return False
 
         return True
@@ -106,21 +81,21 @@ class BodyMetricsForm(QWidget):
         """
         # Gather data from input fields
         form_data = {
-            "name": self.name_input.text().strip(),
             "age": self.age_input.text().strip(),
             "height": self.height_input.text().strip(),
             "current_weight": self.current_weight_input.text().strip(),
-            "goal_weight": self.goal_weight_input.text().strip(),
             "sex": self.sex_selector.currentText(),
         }
 
         # Validate the collected data
-        if not self.validate_data(form_data):
+        if not self.__validate_data(form_data):
             return  # Stop execution if the data is invalid
 
         # Save data using StorageManager
-        for key, value in form_data.items():
-            StorageManager.set_value(f"body_metrics/{key}", value)
+        StorageManager.set_value(StorageKey.Age.value, form_data["age"])
+        StorageManager.set_value(StorageKey.Height.value, form_data["height"])
+        StorageManager.set_value(StorageKey.CurrentWeight.value, form_data["current_weight"])
+        StorageManager.set_value(StorageKey.Sex.value, form_data["sex"])
 
         # Sync the settings to make sure the data is stored
         StorageManager.sync()
@@ -128,5 +103,3 @@ class BodyMetricsForm(QWidget):
         # Show a success message
         QMessageBox.information(self, "Success", "Your body metrics have been saved successfully.")
 
-        # Execute the callback function with the form data
-        self.submit_callback(form_data)
