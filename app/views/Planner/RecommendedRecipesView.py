@@ -89,7 +89,7 @@ class RecommendedRecipesView(QWidget):
         StorageManager.set_value(StorageKey.Goal.value, goal_value)
         StorageManager.set_value(StorageKey.ActivityType.value, activity_type_value)
 
-        weight = StorageManager.get_value(StorageKey.Weight.value, None)
+        weight = StorageManager.get_value(StorageKey.CurrentWeight.value, None)
         height = StorageManager.get_value(StorageKey.Height.value, None)
         age = StorageManager.get_value(StorageKey.CurrentWeight.value, None)
         gender = StorageManager.get_value(StorageKey.Sex.value, None)
@@ -100,17 +100,19 @@ class RecommendedRecipesView(QWidget):
                 "We are missing some info about you and are unable to suggest recipes. Do you want to go to settings?",
                 "Yes"
             )
-
             if dialog.exec_() == QDialog.Accepted:
                 self.nav_controller.navigate(Route.SETTINGS)
+                return
 
-        try:
-            tdee = self.nutrition_controller.get_TDEE(weight, height, age, gender, selected_activity_type, selected_goal)
-            recommended_recipes = self.nutrition_controller.get_recommended_recipes(tdee)
-        except Exception as e:
-            tdee = 0
-            print(f"Error getting recommendations: {e}")
-            recommended_recipes = []
+        tdee = self.nutrition_controller.get_TDEE(
+            weight=float(weight),
+            height=float(height),
+            age=int(age),
+            gender=gender.lower(),
+            activity_type=selected_activity_type,
+            goal=selected_goal
+        )
+        recommended_recipes = self.nutrition_controller.get_recommended_recipes(tdee)
 
         clear_layout(self.recipes_layout)
 

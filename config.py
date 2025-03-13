@@ -23,5 +23,10 @@ NAVIGATION = [
         "icon": "\U0001F525",
         "title": "Planner",
         "route": Route.RECOMMENDATIONS
+    },
+    {
+        "icon": "\U0001F6E0",
+        "title": "Settings",
+        "route": Route.SETTINGS
     }
 ]

@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
         nav_controller.register_route(Route.NOTE_EDIT, note_edit_page_factory)
         nav_controller.register_route(Route.NOTE_CREATE, note_create_page_factory)
         nav_controller.register_route(Route.RECOMMENDATIONS, recommended_recipes_page_factory)
+        nav_controller.register_route(Route.SETTINGS, settings_page_factory)
         self.nav_controller = nav_controller
 
         self.sidebar = Sidebar(self.nav_controller)
