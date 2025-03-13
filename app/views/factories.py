@@ -9,7 +9,7 @@ from app.views.Recipes.CreateRecipeView import CreateRecipeView
 from app.views.Recipes.RecipeDetailView import RecipeDetailView
 from app.views.Recipes.RecipeEditView import RecipeEditView
 from app.views.Recipes.RecipesListView import RecipesListView
-from app.views.Recipes.RecommendedRecipesView import RecommendedRecipesView
+from app.views.Planner.RecommendedRecipesView import RecommendedRecipesView
 
 
 def home_page_factory(**kwargs):
