@@ -55,7 +55,7 @@ class RecipesListView(QWidget):
         # Create recipes list
         self.recipes = self.recipes_controller.list_recipes(search=q)
         if self.recipes:
-            for idx, recipe in enumerate(self.recipes):
+            for recipe in self.recipes:
                 self.layout.addWidget(
                     RecipesListItemView(
                         recipe=recipe,

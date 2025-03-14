@@ -1,8 +1,7 @@
-from typing import Callable
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 
+from app.controllers.NutritionController import NutritionController
 from app.utils import get_recipes_count_label
 from app.views.Divider import Divider
 from app.views.InfoContainer import InfoContainer
@@ -35,7 +34,9 @@ class IngredientsList(QWidget):
             header_layout.setContentsMargins(10, 10, 10, 10)
             header_layout.setSpacing(0)
             header_layout.setAlignment(Qt.AlignVCenter)
-            count_label = QLabel(get_recipes_count_label(len(ingredients)))
+            count_str = get_recipes_count_label(len(ingredients))
+            kcal_str = NutritionController().get_recipe_calories({'ingredients': ingredients})
+            count_label = QLabel(f"{count_str} - {kcal_str}kcal")
             count_label.setStyleSheet("font-size: 12px; color: gray;")
             header_layout.addWidget(count_label)
             header.setLayout(header_layout)

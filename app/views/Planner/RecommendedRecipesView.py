@@ -64,12 +64,11 @@ class RecommendedRecipesView(QWidget):
                 is_root_view=True,
             )
         )
-        # Add small divider below TopBar
         self.layout.addWidget(Divider())
 
         # List widget to display recommended recipes
-        self.recipes_list = QWidget()  # Using QWidget instead of QListWidget for custom layout
-        self.recipes_layout = QVBoxLayout()  # Use QVBoxLayout to stack recipes vertically
+        self.recipes_list = QWidget()
+        self.recipes_layout = QVBoxLayout()
         self.recipes_list.setLayout(self.recipes_layout)
         self.recipes_list.setMinimumHeight(400)
         self.recipes_layout.setContentsMargins(0, 0, 0, 0)
@@ -131,6 +130,9 @@ class RecommendedRecipesView(QWidget):
         self.recipes_layout.addWidget(self.subheader)
         self.recipes_layout.addWidget(Divider())
 
+        self.__list_recommendations_or_error(recommended_recipes)
+
+    def __list_recommendations_or_error(self, recommended_recipes: str | list[dict]):
         if not recommended_recipes or not isinstance(recommended_recipes, list):
             self.recipes_layout.addWidget(
                 NoContentView(

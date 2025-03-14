@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QFormLayout, QVBoxLayout, QPushButton, QDialog
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QDialog
 
 from app.controllers.NavigationController import NavigationController
 from app.controllers.NotesController import NotesController
@@ -24,16 +24,19 @@ class NoteEditView(QWidget):
         self.delete_btn.setStyleSheet("color: red;")
         self.delete_btn.clicked.connect(lambda: self.__show_confirmation_dialog())
 
+        self.form = NoteForm(self.__update_note, initial_note=note)
+        self.update_btn = QPushButton("Update")
+        self.update_btn.clicked.connect(lambda: self.form.submit_data())
+
         self.layout.addWidget(
             TopBar(
                 title="Edit Note",
                 nav_controller=self.nav_controller,
-                actions=[self.delete_btn]
+                actions=[self.delete_btn, self.update_btn]
             )
         )
         self.layout.addWidget(Divider())
-
-        self.layout.addWidget(NoteForm(self.__update_note, initial_note=note))
+        self.layout.addWidget(self.form)
 
         self.setLayout(self.layout)
 

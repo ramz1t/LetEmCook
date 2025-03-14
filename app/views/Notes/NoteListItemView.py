@@ -11,7 +11,7 @@ class NoteListItemView(QWidget):
     def __init__(self, note: dict, nav_controller: NavigationController):
         super().__init__()
         self.nav_controller = nav_controller
-        self.full_text = note['text']  # Store the full text
+        self.full_text = note['text']
 
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(15, 15, 15, 15)
@@ -30,7 +30,7 @@ class NoteListItemView(QWidget):
 
         self.text_label = QLabel()
         self.text_label.setWordWrap(True)
-        self.text_label.setAlignment(Qt.AlignTop)  # Align text to the top
+        self.text_label.setAlignment(Qt.AlignTop)
 
         self.details_btn = QPushButton("Details")
         self.details_btn.clicked.connect(lambda: self.nav_controller.navigate(Route.NOTE_DETAIL, note=note))
@@ -38,11 +38,11 @@ class NoteListItemView(QWidget):
 
         self.layout.addWidget(self.title_label)
         self.layout.addWidget(self.text_label)
+        self.layout.addStretch()
         self.layout.addWidget(self.details_btn)
 
         self.setLayout(self.layout)
 
-        # Perform initial truncation
         self.truncate_text()
 
     def truncate_text(self):

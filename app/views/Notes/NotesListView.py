@@ -1,7 +1,7 @@
 from typing import Optional
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QSlider, QGridLayout, QLabel, QHBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QSlider, QGridLayout, QHBoxLayout, QSizePolicy
 
 from app.controllers.NavigationController import NavigationController
 from app.controllers.NotesController import NotesController
