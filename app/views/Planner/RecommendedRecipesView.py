@@ -102,7 +102,7 @@ class RecommendedRecipesView(QWidget):
             )
             if dialog.exec_() == QDialog.Accepted:
                 self.nav_controller.navigate(Route.SETTINGS)
-                return
+            return
 
         tdee = self.nutrition_controller.get_TDEE(
             weight=float(weight),
