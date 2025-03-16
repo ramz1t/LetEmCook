@@ -1,17 +1,11 @@
 import pytest
 from app.models import Base, engine, Session, Note
 from app.controllers.NotesController import NotesController
-from sqlalchemy.exc import OperationalError
-from sqlalchemy.sql import text
 
 
 
 @pytest.fixture(scope="function")
 def setup_database():
-    """
-    Setup a clean database for each test, creating test data and returning it.
-    Yields the test database session.
-    """
     Base.metadata.create_all(engine)
 
     with Session() as session:
@@ -31,9 +25,6 @@ def setup_database():
 
 
 def test_list_all_notes(setup_database):
-    """
-    Test the list function with no search query (should return all notes).
-    """
     controller = NotesController()
 
     result = controller.list(search="")
@@ -45,9 +36,6 @@ def test_list_all_notes(setup_database):
 
 
 def test_list_notes_with_search(setup_database):
-    """
-    Test the list function with a search query (should return matching notes).
-    """
     controller = NotesController()
 
     result = controller.list(search="Pizza")
@@ -58,9 +46,6 @@ def test_list_notes_with_search(setup_database):
 
 
 def test_list_notes_with_partial_match(setup_database):
-    """
-    Test the list function with a search query that partially matches note content.
-    """
     controller = NotesController()
 
     result = controller.list(search="Salad")
@@ -71,9 +56,6 @@ def test_list_notes_with_partial_match(setup_database):
 
 
 def test_list_notes_no_match(setup_database):
-    """
-    Test the list function with a search query that doesn’t match any notes.
-    """
     controller = NotesController()
 
     result = controller.list(search="Burger")

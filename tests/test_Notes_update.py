@@ -5,10 +5,6 @@ from app.controllers.NotesController import NotesController
 
 @pytest.fixture(scope="function")
 def setup_database():
-    """
-    Setup a clean database for each test, creating test data and returning it.
-    Yields the test database session.
-    """
     Base.metadata.create_all(engine)
 
     with Session() as session:
@@ -24,9 +20,6 @@ def setup_database():
 
 
 def test_update_existing_note(setup_database):
-    """
-    Test updating an existing note.
-    """
     controller = NotesController()
 
     updated_data = {"title": "New Title", "text": "Updated Text"}
@@ -47,9 +40,6 @@ def test_update_existing_note(setup_database):
 
 
 def test_update_nonexistent_note(setup_database):
-    """
-    Test updating a note that does not exist.
-    """
     controller = NotesController()
 
     with pytest.raises(Exception, match="Note not found"):
@@ -57,9 +47,6 @@ def test_update_nonexistent_note(setup_database):
 
 
 def test_update_partial_fields(setup_database):
-    """
-    Test updating a note with partial fields (e.g., only title).
-    """
     controller = NotesController()
 
     partial_data = {"title": "New Title"}

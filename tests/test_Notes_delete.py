@@ -5,11 +5,6 @@ from app.controllers.NotesController import NotesController
 
 @pytest.fixture(scope="function")
 def setup_database():
-    """
-    Setup a clean database for each test, creating test data and returning it.
-    Yields the test database session.
-    """
-
     Base.metadata.create_all(engine)
 
     with Session() as session:
@@ -27,9 +22,6 @@ def setup_database():
 
 
 def test_delete_existing_note(setup_database):
-    """
-    Test deleting an existing note.
-    """
     controller = NotesController()
 
     with Session() as session:
@@ -44,9 +36,6 @@ def test_delete_existing_note(setup_database):
 
 
 def test_delete_nonexistent_note(setup_database):
-    """
-    Test attempting to delete a nonexistent note.
-    """
     controller = NotesController()
 
     with pytest.raises(Exception, match="Note not found"):
