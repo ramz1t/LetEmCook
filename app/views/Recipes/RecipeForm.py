@@ -40,7 +40,8 @@ class RecipeForm(QWidget):
             title="Description:",
             initial_text=initial_recipe['description'] if initial_recipe else "",
             is_multiline=True,
-            margins=[0, 10, 0, 0]
+            margins=[0, 10, 0, 0],
+            enhanceable=True,
         )
         self.layout.addWidget(self.description_input)
 

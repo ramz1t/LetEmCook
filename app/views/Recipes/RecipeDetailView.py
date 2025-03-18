@@ -6,7 +6,7 @@ from app.views.Divider import Divider
 from app.views.InfoContainer import InfoContainer
 from app.views.Recipes.IngredientsList import IngredientsList
 from app.views.TopBar import TopBar
-
+import markdown
 
 class RecipeDetailView(QWidget):
     def __init__(self, recipe: dict, nav_controller: NavigationController):
@@ -34,7 +34,7 @@ class RecipeDetailView(QWidget):
         self.layout.addWidget(Divider())
 
         # Description label
-        self.description_label = QLabel(recipe["description"])
+        self.description_label = QLabel(markdown.markdown(recipe["description"]))
         self.description_label.setWordWrap(True)
         self.description_label.setStyleSheet("padding: 10px;")
         self.layout.addWidget(InfoContainer(self.description_label, margin="20px"))
