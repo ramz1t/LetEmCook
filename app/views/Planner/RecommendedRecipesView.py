@@ -1,6 +1,7 @@
+import os
+
+from PyQt5.QtGui import QImage, QPixmap, QTransform
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QComboBox, QLabel, QHBoxLayout, QSizePolicy, QDialog
-from PyQt5.QtCore import Qt
-from sqlalchemy.orm.sync import clear
 
 from app.controllers.NutritionController import NutritionController
 from app.controllers.StorageManager import StorageManager
@@ -74,6 +75,26 @@ class RecommendedRecipesView(QWidget):
         self.recipes_layout.setContentsMargins(0, 0, 0, 0)
         self.recipes_layout.setSpacing(0)
         self.layout.addWidget(self.recipes_list)
+
+        self.arrow_layout = QHBoxLayout()
+        self.arrow_box = QWidget()
+        self.arrow_box.setLayout(self.arrow_layout)
+        self.arrow_layout.addStretch(1)
+        self.arrow_box.setContentsMargins(0, 20, 80, 0)
+
+        self.arrow_img = QLabel()
+        self.arrow_pixmap = QPixmap("./resources/images/arrow.png")
+        transform = QTransform().rotate(-45).scale(0.3, -0.1)
+        self.arrow_pixmap = self.arrow_pixmap.transformed(transform)
+        self.arrow_img.setPixmap(self.arrow_pixmap)
+
+        self.arrow_layout.addWidget(self.arrow_img)
+
+        self.recipes_layout.addWidget(self.arrow_box)
+        self.recipes_layout.addWidget(NoContentView(
+            title="Welcome to 🔥 Planner",
+            description="Select desired result, your current activity type and click \"Recommend\" to see suggested recipes to the day."
+        ))
 
         # Set the layout
         self.setLayout(self.layout)
