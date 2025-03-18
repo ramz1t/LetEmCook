@@ -1,6 +1,9 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QTextEdit, QLineEdit, QSizePolicy
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QTextEdit, QLineEdit, QSizePolicy, QMessageBox, QPushButton, \
+    QVBoxLayout
 
+from app.ai import generate_enhanced_text
 from app.utils import style_h2
 
 
@@ -16,6 +19,7 @@ class FormInput(QWidget):
         initial_text: The initial text provided during instantiation.
         is_multiline: Whether the input is multi-line (`QTextEdit`) or single-line (`QLineEdit`).
         margins: The margins applied to the layout [left, top, right, bottom].
+        enhanceable: The field can be enhanced using through LLM request.
 
     Examples:
         >>> single_line = FormInput("Name", "John Doe")
@@ -27,13 +31,17 @@ class FormInput(QWidget):
             title: str,
             initial_text: str = "",
             is_multiline: bool = False,
-            margins: list[int] | None = None
+            margins: list[int] | None = None,
+            enhanceable: bool = False,
     ):
         super().__init__()
         self.text = initial_text
         self.initial_text = initial_text
         self.is_multiline = is_multiline
         self.margins = margins if margins is not None else [0, 0, 0, 0]
+        self.enhanceable = enhanceable
+
+        self.__original_text = self.initial_text
 
         self.layout = QHBoxLayout()
         self.layout.setContentsMargins(*self.margins)
@@ -58,6 +66,17 @@ class FormInput(QWidget):
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.input)
 
+        if self.enhanceable:
+            self.buttons = QVBoxLayout()
+            self.enhance_btn = QPushButton("MistralAI")
+            self.enhance_btn.setIcon(QIcon('./resources/images/mistral-ai-icon.png'))
+            self.enhance_btn.clicked.connect(self.__enhance)
+            self.rollback_btn = QPushButton("Rollback")
+            self.rollback_btn.clicked.connect(self.__rollback)
+            self.buttons.addWidget(self.enhance_btn)
+            self.buttons.addWidget(self.rollback_btn)
+            self.layout.addLayout(self.buttons)
+
         self.setLayout(self.layout)
 
     def __update_text(self):
@@ -68,3 +87,27 @@ class FormInput(QWidget):
             self.text = self.input.toPlainText()
         else:
             self.text = self.input.text()
+
+    def __enhance(self):
+        if not self.text:
+            QMessageBox.warning(self,
+                                "Empty text",
+                                "Please enter text to enhance. eg. Russian dumplings recipe, Cheap asian recipe with shrimps etc.")
+            return
+
+        self.__original_text = self.text
+
+        try:
+            enhanced_text = generate_enhanced_text(self.text)
+        except ConnectionError as e:
+            QMessageBox.warning(self, "Connection error", str(e))
+            return
+
+        self.__set_new_value(enhanced_text)
+
+    def __rollback(self):
+        self.__set_new_value(self.__original_text)
+
+    def __set_new_value(self, new_value: str):
+        self.text = new_value
+        self.input.setText(new_value)
