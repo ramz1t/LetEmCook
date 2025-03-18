@@ -14,16 +14,18 @@ from app.views.Settings.SettingsView import SettingsView
 
 
 def home_page_factory(**kwargs):
+    # Since the app's window size is fixed, some lines need a forced <br> to stay in frame and for the "text-align: center" being correct.
     introduction = QLabel('''
-    <br><br>
+    <div style="margin-left: 15px;">
+    <br>
     <p style="text-align: center; font-size: 30px;">
     <b>Welcome to 
     </p>
-    <p style="text-align: center; font-size: 40px;">
-    <b><span style="font-size: 40px;">Let'EmCook</span>!</b>
+    <p style="text-align: center; font-size: 60px;">
+    <b>Let'EmCook</b>
     </p>
     <br>
-    <p style="font-size: 18px;">The goal of this app is to help you manage your diet so you can keep a better track of the nutrients and calories you <br> eat to make you feel better.</p>
+    <p style="font-size: 15px;">The goal of this app is to help you manage your diet so you can keep a better track of the nutrients and calories you <br> eat to make you feel better.</p>
 
     <hr>
     <p style="font-size: 15px;">
@@ -42,7 +44,7 @@ def home_page_factory(**kwargs):
     - Tracking your mood and your feelings with recipes will help you achieve the diet you need to confront everyday plans. Looking back at your <br> &nbsp; notes can give you valuable insights to improve your diet and well-being.<br>
     </p>
     <hr>
-    <p><b>This app has been created by:</b></p>
+    <p style="font-size: 15px;"><b>This app has been created by:</b>
     <ul>
         <li><a href="https://github.com/ramz1t">Timur Ramazanov</a> (main repository)</li>
         <li><a href="https://github.com/ayahassaad">Ayah Assaad</a></li>
@@ -50,9 +52,10 @@ def home_page_factory(**kwargs):
         <li><a href="https://github.com/mavagoncalves">Maria Valentina Gonçalves Rojas</a></li>
         <li><a href="https://github.com/robrodres">Roberto Rodríguez Espejo</a></li>
     </ul>
+    </p>
     <br>
+    </dv>
     ''')
-
     # This makes our url´s clickable
     introduction.setOpenExternalLinks(True)
 
