@@ -57,7 +57,7 @@ git clone https://github.com/ramz1t/LetEmCook.git
 Install dependencies
 
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 Apply migrations
