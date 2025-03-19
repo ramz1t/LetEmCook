@@ -3,8 +3,10 @@ from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout, QSizePol
 
 
 def home_text():
+    # Some parts have &nbsp; to make it match the left margin after a line jump.
     introduction = QLabel('''
     <div style="margin-left: 15px;">
+    <br>
     <br>
     <p style="text-align: center; font-size: 30px;">
     <b>Welcome to 
@@ -26,10 +28,10 @@ def home_text():
 
     <p style="font-size: 15px;">
     <b>Remember:</b><br>
-    - Having enough energy helps you stay on track with your routine. Carbohydrates offer a stable energy source while sugars may cause a fluctuation &nbsp; in energy levels.<br>
+    - Having enough energy helps you stay on track with your routine. Carbohydrates offer a stable energy source while sugars may cause a &nbsp; &nbsp; fluctuation in energy levels.<br>
     - Foods rich in tryptophan (turkey, bananas, dairy) help produce serotonin, the "happiness hormone."<br>
-    - Stress and Anxiety Reduction: Omega-3 fatty acids (fish, nuts) and antioxidants (fruits, vegetables) can help lower stress and improve &nbsp; emotional well-being.<br>
-    - Tracking your mood and your feelings with recipes will help you achieve the diet you need to confront everyday plans. Looking back at &nbsp; your notes can give you valuable insights to improve your diet and well-being.<br>
+    - Stress and Anxiety Reduction: Omega-3 fatty acids (fish, nuts) and antioxidants (fruits, vegetables) can help lower stress and improve &nbsp; &nbsp; &nbsp; emotional well-being.<br>
+    - Tracking your mood and your feelings with recipes will help you achieve the diet you need to confront everyday plans. Looking back at &nbsp; &nbsp; &nbsp; &nbsp; your notes can give you valuable insights to improve your diet and well-being.<br>
     </p>
     <hr>
     <p style="font-size: 15px;"><b>This app has been created by:</b>
