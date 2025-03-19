@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QLabel
-
 from app.controllers.NavigationController import NavigationController
 from app.views.Notes.CreateNoteView import CreateNoteView
 from app.views.Notes.NoteDetailView import NoteDetailView
@@ -11,11 +10,11 @@ from app.views.Recipes.RecipeEditView import RecipeEditView
 from app.views.Recipes.RecipesListView import RecipesListView
 from app.views.Planner.RecommendedRecipesView import RecommendedRecipesView
 from app.views.Settings.SettingsView import SettingsView
-from app.views.home_text import home_text
+from app.views.Introduction import Introduction
 
 
 def home_page_factory(**kwargs):
-    return home_text()
+    return Introduction()
 
 def recipes_page_factory(nav_controller: NavigationController, **kwargs):
     return RecipesListView(nav_controller=nav_controller, **kwargs)
