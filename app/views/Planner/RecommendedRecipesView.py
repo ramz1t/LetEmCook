@@ -1,6 +1,7 @@
+import os
+
+from PyQt5.QtGui import QImage, QPixmap, QTransform
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QComboBox, QLabel, QHBoxLayout, QSizePolicy, QDialog
-from PyQt5.QtCore import Qt
-from sqlalchemy.orm.sync import clear
 
 from app.controllers.NutritionController import NutritionController
 from app.controllers.StorageManager import StorageManager
@@ -11,6 +12,7 @@ from app.controllers.NavigationController import NavigationController
 from app.enums.storage import StorageKey
 from app.utils import clear_layout, style_h2
 from app.views.CustomDialog import CustomDialog
+from app.views.NoContentView import NoContentView
 from app.views.Recipes.RecipesListItemView import RecipesListItemView
 from app.views.TopBar import TopBar
 from app.views.Divider import Divider
@@ -63,17 +65,36 @@ class RecommendedRecipesView(QWidget):
                 is_root_view=True,
             )
         )
-        # Add small divider below TopBar
         self.layout.addWidget(Divider())
 
         # List widget to display recommended recipes
-        self.recipes_list = QWidget()  # Using QWidget instead of QListWidget for custom layout
-        self.recipes_layout = QVBoxLayout()  # Use QVBoxLayout to stack recipes vertically
+        self.recipes_list = QWidget()
+        self.recipes_layout = QVBoxLayout()
         self.recipes_list.setLayout(self.recipes_layout)
         self.recipes_list.setMinimumHeight(400)
         self.recipes_layout.setContentsMargins(0, 0, 0, 0)
         self.recipes_layout.setSpacing(0)
         self.layout.addWidget(self.recipes_list)
+
+        self.arrow_layout = QHBoxLayout()
+        self.arrow_box = QWidget()
+        self.arrow_box.setLayout(self.arrow_layout)
+        self.arrow_layout.addStretch(1)
+        self.arrow_box.setContentsMargins(0, 20, 80, 0)
+
+        self.arrow_img = QLabel()
+        self.arrow_pixmap = QPixmap("./resources/images/arrow.png")
+        transform = QTransform().rotate(-45).scale(0.3, -0.1)
+        self.arrow_pixmap = self.arrow_pixmap.transformed(transform)
+        self.arrow_img.setPixmap(self.arrow_pixmap)
+
+        self.arrow_layout.addWidget(self.arrow_img)
+
+        self.recipes_layout.addWidget(self.arrow_box)
+        self.recipes_layout.addWidget(NoContentView(
+            title="Welcome to 🔥 Planner",
+            description="Select desired result, your current activity type and click \"Recommend\" to see suggested recipes to the day."
+        ))
 
         # Set the layout
         self.setLayout(self.layout)
@@ -102,7 +123,7 @@ class RecommendedRecipesView(QWidget):
             )
             if dialog.exec_() == QDialog.Accepted:
                 self.nav_controller.navigate(Route.SETTINGS)
-                return
+            return
 
         tdee = self.nutrition_controller.get_TDEE(
             weight=float(weight),
@@ -130,9 +151,17 @@ class RecommendedRecipesView(QWidget):
         self.recipes_layout.addWidget(self.subheader)
         self.recipes_layout.addWidget(Divider())
 
+        self.__list_recommendations_or_error(recommended_recipes)
+
+    def __list_recommendations_or_error(self, recommended_recipes: str | list[dict]):
         if not recommended_recipes or not isinstance(recommended_recipes, list):
-            no_recipes_label = QLabel("No combination of 3 meals found for recommended calorie intake.") # TODO: replace with NoContentView
-            self.recipes_layout.addWidget(no_recipes_label)
+            self.recipes_layout.addWidget(
+                NoContentView(
+                    title="No Recommendations This Time",
+                    description="We could not find suitable recipes for your needs. Try changing your goal or adding more recipes.",
+                    margins=[0, 160, 0, 0]
+                )
+            )
         else:
             for recipe in recommended_recipes:
                 recipe_item = RecipesListItemView(recipe=recipe, nav_controller=self.nav_controller)
@@ -141,7 +170,6 @@ class RecommendedRecipesView(QWidget):
             self.total_cals = sum(self.nutrition_controller.get_recipe_calories(recipe) for recipe in recommended_recipes)
             self.total_cals_label = QLabel(f"Total calorie intake: {self.total_cals}kcal")
             style_h2(self.total_cals_label)
-            self.total_cals_label.setContentsMargins(20, 10, 0, 10)
             self.subheader_layout.addWidget(self.total_cals_label)
 
         self.recipes_layout.addStretch()

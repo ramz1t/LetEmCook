@@ -1,11 +1,11 @@
-from typing import Callable
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 
+from app.controllers.NutritionController import NutritionController
 from app.utils import get_recipes_count_label
 from app.views.Divider import Divider
 from app.views.InfoContainer import InfoContainer
+from app.views.NoContentView import NoContentView
 
 
 class IngredientsList(QWidget):
@@ -34,7 +34,9 @@ class IngredientsList(QWidget):
             header_layout.setContentsMargins(10, 10, 10, 10)
             header_layout.setSpacing(0)
             header_layout.setAlignment(Qt.AlignVCenter)
-            count_label = QLabel(get_recipes_count_label(len(ingredients)))
+            count_str = get_recipes_count_label(len(ingredients))
+            kcal_str = NutritionController().get_recipe_calories({'ingredients': ingredients})
+            count_label = QLabel(f"{count_str} - {kcal_str}kcal")
             count_label.setStyleSheet("font-size: 12px; color: gray;")
             header_layout.addWidget(count_label)
             header.setLayout(header_layout)
@@ -54,7 +56,13 @@ class IngredientsList(QWidget):
             nutrition_info_label.setContentsMargins(10, 10, 10, 10)
 
         else:
-            ingredients_list_layout.addWidget(QLabel("No ingredients"))  # TODO: replace with NoContentView
+            ingredients_list_layout.addWidget(
+                NoContentView(
+                    title="No Ingredients",
+                    description="This recipe has no ingredients. Change the recipe and they will show up here",
+                    margins=[0,16,0,16]
+                )
+            )
 
         layout.addWidget(InfoContainer(ingredients_list))
 

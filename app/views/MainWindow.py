@@ -1,6 +1,6 @@
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
-from app.controllers.NavigationController import NavigationController
 from app.controllers.StorageManager import StorageManager
 from app.enums.route import Route
 from app.views.Divider import Divider
@@ -14,6 +14,7 @@ class MainWindow(QMainWindow):
         HEIGHT = 700
 
         self.setWindowTitle("Let'EmCook")
+        self.setWindowIcon(QIcon('./resources/images/icon.png'))
 
         self.setGeometry(100, 100, WIDTH, HEIGHT)
         self.setMaximumSize(WIDTH, HEIGHT)

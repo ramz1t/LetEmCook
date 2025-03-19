@@ -1,7 +1,7 @@
 from typing import Optional
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QSlider, QGridLayout, QLabel, QHBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QSlider, QGridLayout, QHBoxLayout, QSizePolicy
 
 from app.controllers.NavigationController import NavigationController
 from app.controllers.NotesController import NotesController
@@ -9,6 +9,7 @@ from app.controllers.StorageManager import StorageManager
 from app.enums.route import Route
 from app.enums.storage import StorageKey
 from app.views.Divider import Divider
+from app.views.NoContentView import NoContentView
 from app.views.Notes.NoteListItemView import NoteListItemView
 from app.views.SearchBar import SearchBar
 from app.views.TopBar import TopBar
@@ -88,7 +89,13 @@ class NotesListView(QWidget):
             for col in range(self.slider.value()):
                 self.grid_layout.setColumnStretch(col, 1)
         else:
-            layout.addWidget(QLabel("no notes found")) # TODO: replace with NoContentView
+            layout.addWidget(
+                NoContentView(
+                    title=f'No Results for "{q}"',
+                    description="No notes found. Check the spelling or try a new search.",
+                    margins=[0, 160, 0, 0]
+                )
+            )
 
         self.setLayout(layout)
 

@@ -1,6 +1,6 @@
 from typing import Callable
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 
 from app.views.FormInput import FormInput
 
@@ -23,12 +23,9 @@ class NoteForm(QWidget):
             initial_text=initial_note["text"] if initial_note else "",
             is_multiline=True
         )
-        self.submit_btn = QPushButton("Submit")
-        self.submit_btn.clicked.connect(self.submit_data)
 
         self.layout.addWidget(self.title_input)
         self.layout.addWidget(self.text_input)
-        self.layout.addWidget(self.submit_btn)
 
         self.setLayout(self.layout)
 

@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 
 from app.controllers.NavigationController import NavigationController
-from app.views.Settings.BodyMetricsView import BodyMetricsForm
+from app.utils import style_h2
+from app.views.Settings.BodyMetricsForm import BodyMetricsForm
 from app.views.Divider import Divider
 from app.views.TopBar import TopBar
 
@@ -25,6 +26,6 @@ class SettingsView(QWidget):
         )
         self.layout.addWidget(Divider())
 
-        self.layout.addWidget(BodyMetricsForm())
+        self.layout.addWidget(BodyMetricsForm(self.nav_controller))
 
         self.setLayout(self.layout)

@@ -6,6 +6,7 @@ from app.controllers.NavigationController import NavigationController
 from app.controllers.RecipesController import RecipesController
 from app.enums.route import Route
 from app.views.Divider import Divider
+from app.views.NoContentView import NoContentView
 from app.views.Recipes.RecipesListItemView import RecipesListItemView
 from app.views.SearchBar import SearchBar
 from app.views.TopBar import TopBar
@@ -54,7 +55,7 @@ class RecipesListView(QWidget):
         # Create recipes list
         self.recipes = self.recipes_controller.list_recipes(search=q)
         if self.recipes:
-            for idx, recipe in enumerate(self.recipes):
+            for recipe in self.recipes:
                 self.layout.addWidget(
                     RecipesListItemView(
                         recipe=recipe,
@@ -63,7 +64,13 @@ class RecipesListView(QWidget):
                 )
                 self.layout.addWidget(Divider(opacity=0.3))
         else:
-            self.layout.addWidget(QLabel("No recipes found")) # TODO: replace with NoContentView
+            self.layout.addWidget(
+                NoContentView(
+                    title=f'No Results for "{q}"',
+                    description="No recipes found. Check the spelling or try a new search.",
+                    margins=[0,160,0,0]
+                )
+            )
 
         self.setLayout(self.layout)
 

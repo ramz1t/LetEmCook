@@ -22,18 +22,22 @@ class CreateRecipeView(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
+        self.form = RecipeForm(self.__create_recipe)
+
+        self.create_btn = QPushButton("Create")
+        self.create_btn.clicked.connect(lambda: self.form.submit_data())
+
         # Set page TopBar
         layout.addWidget(
             TopBar(
                 title="Create New Recipe",
                 nav_controller=self.nav_controller,
+                actions=[self.create_btn]
             )
         )
         layout.addWidget(Divider())
 
-        # RecipeForm here
-        self.recipe_form = RecipeForm(self.__create_recipe)
-        layout.addWidget(self.recipe_form)
+        layout.addWidget(self.form)
 
         self.setLayout(layout)
 

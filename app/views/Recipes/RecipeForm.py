@@ -51,10 +51,6 @@ class RecipeForm(QWidget):
         )
         self.layout.addWidget(ingredients_picker)
 
-        self.submit_button = QPushButton("Submit")
-        self.submit_button.clicked.connect(self.submit_data)
-        self.layout.addWidget(self.submit_button)
-
         self.setLayout(self.layout)
 
     def submit_data(self):

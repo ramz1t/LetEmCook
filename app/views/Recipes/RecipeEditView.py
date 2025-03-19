@@ -24,18 +24,24 @@ class RecipeEditView(QWidget):
         self.delete_btn.setStyleSheet("color: red;")
         self.delete_btn.clicked.connect(lambda: self.__show_confirmation_dialog())
 
+        self.form = RecipeForm(self.__update_recipe, self.recipe)
+
+        self.update_btn = QPushButton("Update")
+        self.update_btn.clicked.connect(lambda: self.form.submit_data())
+
         self.layout.addWidget(
             TopBar(
                 title=f"Edit - {recipe['name']}",
                 nav_controller=nav_controller,
                 actions=[
-                    self.delete_btn
+                    self.delete_btn,
+                    self.update_btn
                 ]
             )
         )
         self.layout.addWidget(Divider())
 
-        self.layout.addWidget(RecipeForm(self.__update_recipe, self.recipe))
+        self.layout.addWidget(self.form)
 
         self.setLayout(self.layout)
 

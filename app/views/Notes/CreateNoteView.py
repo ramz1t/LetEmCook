@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
 
 from app.controllers.NavigationController import NavigationController
 from app.controllers.NotesController import NotesController
@@ -18,15 +18,19 @@ class CreateNoteView(QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
+        self.form = NoteForm(self.__create_note)
+        self.create_btn = QPushButton("Create")
+        self.create_btn.clicked.connect(lambda: self.form.submit_data())
+
         self.layout.addWidget(
             TopBar(
                 title="Create Note",
                 nav_controller=self.nav_controller,
+                actions=[self.create_btn]
             )
         )
         self.layout.addWidget(Divider())
-
-        self.layout.addWidget(NoteForm(self.__create_note))
+        self.layout.addWidget(self.form)
 
         self.setLayout(self.layout)
 
